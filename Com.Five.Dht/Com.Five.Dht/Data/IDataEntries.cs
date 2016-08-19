@@ -1,15 +1,13 @@
 ﻿namespace Com.Five.Dht.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
-    public interface IDataEntries<T>
+    public interface IDataEntries
     {
-        bool Insert(Id id, T key, object val);
+        Task<bool> Insert(Id id, string key, object val);
 
-        object Lookup(Id id, T key);
+        Task<object> Lookup(Id id, string key);
+
+        Task Remove(Id id, string key);
     }
 }

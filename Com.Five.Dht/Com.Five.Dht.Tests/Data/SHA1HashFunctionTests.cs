@@ -1,5 +1,6 @@
 ﻿namespace Com.Five.Dht.Tests.Data
 {
+    using DataImpl;
     using Dht.Data;
     using FluentAssertions;
     using NUnit.Framework;

@@ -2,11 +2,14 @@
 {
     using Communication;
     using Data;
+    using System.Threading.Tasks;
 
     public interface INode
     {
         Id Id { get; }
 
-        IEndpoint Endpoint { get; }
+        IChannel Endpoint { get; }
+
+        INode Predecessor { get; set; }
     }
 }

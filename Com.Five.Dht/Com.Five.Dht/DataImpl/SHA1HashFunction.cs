@@ -1,5 +1,6 @@
-﻿namespace Com.Five.Dht.Data
+﻿namespace Com.Five.Dht.DataImpl
 {
+    using Data;
     using System.Security.Cryptography;
 
     public class SHA1HashFunction : IHashFunction

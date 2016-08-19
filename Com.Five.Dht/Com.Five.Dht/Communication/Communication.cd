@@ -1,11 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Interface Name="Com.Five.Dht.Communication.IEndpoint">
-    <Position X="1.5" Y="1" Width="1.5" />
+  <Class Name="Com.Five.Dht.Communication.Requests.Request">
+    <Position X="7.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Communication\IEndpoint.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Requests\Request.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Requests.Insert">
+    <Position X="7.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Communication\Requests\Insert.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Requests.Lookup">
+    <Position X="5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Requests\Lookup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Requests.Remove">
+    <Position X="9.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Requests\Remove.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Com.Five.Dht.Communication.IChannelClient">
+    <Position X="0.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAICAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Communication\IChannelClient.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="Com.Five.Dht.Communication.IChannel">
+    <Position X="2.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAACAAABAAAAAA=</HashCode>
+      <FileName>Communication\IChannel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Communication.IRequestHandler">
+    <Position X="0.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\IRequestHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Com.Five.Dht.Communication.ConnectionState" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAACAAAAQAAAAAAAA=</HashCode>
+      <FileName>Communication\IChannelClient.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Com.Five.Dht.Communication.State">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Communication\IChannel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

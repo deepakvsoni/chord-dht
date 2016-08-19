@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public sealed class Id : IEquatable<Id>, IComparable<Id>
     {
         readonly byte[] _id;
