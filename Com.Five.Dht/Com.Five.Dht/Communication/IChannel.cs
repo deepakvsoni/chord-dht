@@ -6,7 +6,8 @@
     {
         NotOpen,
         Open,
-        Listening
+        Listening,
+        Accepting
     }
 
     public interface IChannel

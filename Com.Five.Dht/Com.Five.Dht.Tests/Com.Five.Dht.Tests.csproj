@@ -92,9 +92,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="CommunicationImpl\SocketAsyncEventArgsPoolTests.cs" />
+    <Compile Include="CommunicationImpl\SocketChannelTests.cs" />
+    <Compile Include="CommunicationImpl\SocketTests.cs" />
     <Compile Include="Data\IdTests.cs" />
-    <Compile Include="Data\SHA1HashFunctionTests.cs" />
-    <Compile Include="Data\StringKeyDataEntriesTests.cs" />
+    <Compile Include="DataImpl\SHA1HashFunctionTests.cs" />
+    <Compile Include="DataImpl\StringKeyDataEntriesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

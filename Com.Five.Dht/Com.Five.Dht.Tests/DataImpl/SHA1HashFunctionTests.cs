@@ -1,7 +1,7 @@
-﻿namespace Com.Five.Dht.Tests.Data
+﻿namespace Com.Five.Dht.Tests.DataImpl
 {
-    using DataImpl;
     using Dht.Data;
+    using Dht.DataImpl;
     using FluentAssertions;
     using NUnit.Framework;
     using System;

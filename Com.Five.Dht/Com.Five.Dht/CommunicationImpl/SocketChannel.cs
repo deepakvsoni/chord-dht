@@ -2,28 +2,30 @@
 {
     using Communication;
     using Communication.Requests;
+    using Communication.Responses;
     using log4net;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.IO;
     using System.Net;
     using System.Net.Sockets;
-    using System.Runtime.InteropServices;
     using System.Runtime.Serialization.Formatters.Binary;
-    using System.Text;
     using System.Threading;
-    using System.Threading.Tasks;
 
     public class SocketChannel : IChannel, IDisposable
     {
         ILog _l = LogManager.GetLogger(typeof(SocketChannel));
 
-        AutoResetEvent _connectionComplete = new AutoResetEvent(false),
-            _shutdown = new AutoResetEvent(false);
+        AutoResetEvent _acceptComplete = new AutoResetEvent(false);
 
         Socket _socket;
 
+        SocketAsyncEventArgsPool _pool;
+
+        //TODO: Refactor message format type and handler.
         BinaryFormatter _formatter = new BinaryFormatter();
+
+        CancellationTokenSource _stopAcceptingToken 
+            = new CancellationTokenSource();
 
         public State State
         {
@@ -44,6 +46,9 @@
                 throw new ArgumentNullException(nameof(url));
             }
             Url = url;
+            _pool = new SocketAsyncEventArgsPool(url.AbsolutePath
+                , 15, ReceiveSendCompleted);
+            _pool.Initialize();
         }
 
         public void Open()
@@ -60,53 +65,125 @@
             IPEndPoint endpoint = new IPEndPoint(ipAddress, Url.Port);
 
             _socket = new Socket(AddressFamily.InterNetworkV6
-                , SocketType.Stream, ProtocolType.IPv6);
+                , SocketType.Stream, ProtocolType.Tcp);
 
             _socket.Bind(endpoint);
+            State = State.Open;
+
             _socket.Listen(100);
+            State = State.Listening;
 
             _l.Info("Connection open and listening.");
 
-            while(true)
+            SocketAsyncEventArgs acceptEa = new SocketAsyncEventArgs();
+            acceptEa.Completed += AcceptCompleted;
+
+            while (!_stopAcceptingToken.IsCancellationRequested)
             {
-                _socket.BeginAccept(AcceptConnectionCallback,
-                    _socket);
+                acceptEa.AcceptSocket = null;
 
-                int index = WaitHandle.WaitAny(
-                    new[] { _connectionComplete, _shutdown });
-
-                if (index == 1)
+                if (!_socket.AcceptAsync(acceptEa))
                 {
-                    _l.Info("Server shutting down.");
+                    ProcessAccept(acceptEa);
+                }
+
+                State = State.Accepting;
+
+                WaitHandle.WaitAny(new[] { _stopAcceptingToken.Token.WaitHandle
+                , _acceptComplete }, -1);
+            }
+
+            //TODO: Socket might be receiveing data. 
+            //Handle scenario and support graceful shutdown.
+            
+            State = State.NotOpen;
+
+            _l.InfoFormat("Shutting down endpoint socket {0}"
+                , Url.AbsolutePath);
+            _socket.Shutdown(SocketShutdown.Both);
+            _socket.Close();
+            _socket.Dispose();
+        }
+
+        void AcceptCompleted(object sender, SocketAsyncEventArgs acceptEa)
+        {
+            ProcessAccept(acceptEa);
+        }
+
+        void ProcessAccept(SocketAsyncEventArgs acceptEa)
+        {
+            SocketAsyncEventArgs readEa = _pool.Pop();
+            ((Token)readEa.UserToken).Socket = acceptEa.AcceptSocket;
+
+            if(!acceptEa.AcceptSocket.ReceiveAsync(readEa))
+            {
+                ProcessReceive(readEa);
+            }
+
+            _acceptComplete.Set();
+        }
+
+        void ReceiveSendCompleted(object sender, SocketAsyncEventArgs readEa)
+        {
+            switch (readEa.LastOperation)
+            {
+                case SocketAsyncOperation.Receive:
+                    ProcessReceive(readEa);
                     break;
+                case SocketAsyncOperation.Send:
+                    break;
+            }
+        }
+
+        void ProcessReceive(SocketAsyncEventArgs readEa)
+        {
+            if(readEa.BytesTransferred > 0)
+            {
+                if(readEa.SocketError == SocketError.Success)
+                {
+                    Token token = (Token)readEa.UserToken;
+                    token.TotalBytes += readEa.BytesTransferred;
+                    token.BufferList.Add(new ArraySegment<byte>(readEa.Buffer, 0, readEa.BytesTransferred));
+                    if(token.Socket.Available == 0)
+                    {
+                        HandleReceive(token);
+                    }
+                    else if(!token.Socket.ReceiveAsync(readEa))
+                    {
+                        ProcessReceive(readEa);
+                    }
                 }
             }
         }
 
-        async void AcceptConnectionCallback(IAsyncResult result)
+        void HandleReceive(Token token)
         {
-            Socket serverSocket = (Socket)result.AsyncState;
-
-            Socket callerSocket = serverSocket.EndAccept(result);
-
-            _l.InfoFormat("Accepted connection from {0}"
-                , callerSocket.RemoteEndPoint);
-
-            await Task.Factory.StartNew(() =>
+            Request req = null;
+            using (MemoryStream ms = new MemoryStream(token.TotalBytes))
             {
-                NetworkStream stream = new NetworkStream(callerSocket);
-
-                try
+                foreach (ArraySegment<byte> segment in token.BufferList)
                 {
-                    Request req = (Request)_formatter.Deserialize(stream);
-                    _l.InfoFormat("Request: {0}", req);
+                    ms.Write(segment.Array, segment.Offset, segment.Count);
                 }
-                catch
-                {
-                    _l.Info("Invalid request type.");
-                }
+                ms.Seek(0, SeekOrigin.Begin);
+                req = (Request)_formatter.Deserialize(ms);
+                _l.InfoFormat("Received qequest: {0}", req);
+            }
 
-            });
+            //TODO: Move to handler?
+            if(req is Shutdown)
+            {
+                token.Socket.Shutdown(SocketShutdown.Both);
+                token.Socket.Close();
+
+                _stopAcceptingToken.Cancel();
+            }
+            //TODO: Handle request
+        }
+
+        void Send(Token token, Response response)
+        {
+
         }
 
         #region IDisposable Support

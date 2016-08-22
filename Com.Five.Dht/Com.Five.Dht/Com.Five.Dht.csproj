@@ -48,8 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunicationImpl\SocketAsyncEventArgsPool.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClient.cs" />
     <Compile Include="CommunicationImpl\SocketChannel.cs" />
+    <Compile Include="CommunicationImpl\RequestHandler.cs" />
+    <Compile Include="CommunicationImpl\Token.cs" />
     <Compile Include="Communication\IChannelClient.cs" />
     <Compile Include="Communication\IChannel.cs" />
     <Compile Include="Communication\IRequestHandler.cs" />
@@ -57,8 +60,10 @@
     <Compile Include="Communication\Requests\Request.cs" />
     <Compile Include="Communication\Requests\Insert.cs" />
     <Compile Include="Communication\Requests\Lookup.cs" />
+    <Compile Include="Communication\Requests\Shutdown.cs" />
     <Compile Include="Communication\Responses\InsertResponse.cs" />
     <Compile Include="Communication\Responses\Response.cs" />
+    <Compile Include="Communication\Responses\ShutdownResponse.cs" />
     <Compile Include="Data\Id.cs" />
     <Compile Include="Data\IDataEntries.cs" />
     <Compile Include="Data\IEntry.cs" />
