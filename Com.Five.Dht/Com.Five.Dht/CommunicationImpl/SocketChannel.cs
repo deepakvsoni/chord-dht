@@ -100,9 +100,9 @@
 
             _l.InfoFormat("Shutting down endpoint socket {0}"
                 , Url.AbsolutePath);
-            _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
             _socket.Dispose();
+            _socket = null;
         }
 
         void AcceptCompleted(object sender, SocketAsyncEventArgs acceptEa)
@@ -171,7 +171,7 @@
             }
 
             //TODO: Move to handler?
-            if(req is Shutdown)
+            if(req is Shutdown) 
             {
                 token.Socket.Shutdown(SocketShutdown.Both);
                 token.Socket.Close();
@@ -198,10 +198,11 @@
                 {
                     // TODO: dispose managed state (managed objects).
                 }
-
-                _socket.Shutdown(SocketShutdown.Both);
-                _socket.Close();
-                _socket.Dispose();
+                if (null != _socket)
+                {
+                    _socket.Close();
+                    _socket.Dispose();
+                }
 
                 disposedValue = true;
             }

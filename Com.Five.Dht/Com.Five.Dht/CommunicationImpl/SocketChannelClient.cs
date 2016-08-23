@@ -12,7 +12,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class SocketChannelClient : IChannelClient
+    public class SocketChannelClient : IChannelClient, IDisposable
     {
         ILog _l = LogManager.GetLogger(typeof(SocketChannelClient));
 
@@ -123,8 +123,43 @@
             _clientSocket.Shutdown(SocketShutdown.Both);
             _clientSocket.Close();
             _clientSocket.Dispose();
-
+            _clientSocket = null;
             _responseReceived.Set();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                if(null != _clientSocket)
+                {
+                    _clientSocket.Shutdown(SocketShutdown.Both);
+                    _clientSocket.Close();
+                    _clientSocket.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        ~SocketChannelClient()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

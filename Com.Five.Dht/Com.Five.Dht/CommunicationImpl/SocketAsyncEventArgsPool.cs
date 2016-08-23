@@ -46,18 +46,22 @@
         {
             if (_initialized)
             {
-                _l.DebugFormat("SocketAsyncEventArgs Pool {0} already initialized.", Id);
+                _l.DebugFormat(
+                    "SocketAsyncEventArgs Pool {0} already initialized.", Id);
                 return;
             }
             lock (_lock)
             {
                 if (_initialized)
                 {
-                    _l.DebugFormat("SocketAsyncEventArgs Pool {0} already initialized.", Id);
+                    _l.DebugFormat(
+                        "SocketAsyncEventArgs Pool {0} already initialized."
+                        , Id);
                     return;
                 }
 
-                _l.InfoFormat("Initializing SocketAsyncEventArgs Pool {0}.", Id);
+                _l.InfoFormat(
+                    "Initializing SocketAsyncEventArgs Pool {0}.", Id);
 
                 _initialized = true;
                 for (int i = 0; i < _capacity; ++i)
@@ -68,7 +72,8 @@
                     ea.SetBuffer(new byte[1024], 0, 1024);
                     _pool.Push(ea);
                 }
-                _l.InfoFormat("SocketAsyncEventArgs Pool {0} initialized.", Id);
+                _l.InfoFormat(
+                    "SocketAsyncEventArgs Pool {0} initialized.", Id);
             }
         }
 
@@ -81,7 +86,9 @@
                     return _pool.Pop();
                 }
             }
-            _l.InfoFormat("SocketAsyncEventArgs Pool {0} has not available args object.", Id);
+            _l.InfoFormat(
+                "SocketAsyncEventArgs Pool {0} has not available args object."
+                , Id);
             return null;
         }
 
@@ -89,7 +96,9 @@
         {
             if (null == args)
             {
-                _l.ErrorFormat("Trying to push SocketAsyncEventArgs object into {0}.", Id);
+                _l.ErrorFormat(
+                    "Trying to push null object into {0} SocketAsyncEventArgs pool."
+                    , Id);
                 throw new ArgumentNullException(nameof(args));
             }
             lock (_lock)
