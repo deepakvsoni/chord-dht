@@ -17,5 +17,9 @@
         State State { get; }
 
         void Open();
+
+        void RequestClose();
+
+        void RegisterChannelListener(IChannelListener listener);
     }
 }

@@ -85,6 +85,8 @@
             {
                 throw new InvalidOperationException("Client not connected.");
             }
+            _l.InfoFormat("Sending request: {0}", message);
+
             return Task.Factory.StartNew<Response>(() =>
             {
                 using (MemoryStream ms = new MemoryStream())
@@ -95,40 +97,108 @@
 
                     byte[] buffer = (byte[])ms.GetBuffer().Clone();
 
+                    Token token = new Token();
+                    token.Socket = _clientSocket;
+
                     SocketAsyncEventArgs sendEa = new SocketAsyncEventArgs();
                     sendEa.SetBuffer(buffer, 0, buffer.Length);
-                    sendEa.UserToken = _clientSocket;
+                    sendEa.UserToken = token;
                     sendEa.RemoteEndPoint = _serverEndpoint;
-                    sendEa.Completed += SendRequestCompleted;
+                    sendEa.Completed += SendReceiveCompleted;
 
                     if(!_clientSocket.SendAsync(sendEa))
                     {
-                        SendRequestCompleted(sendEa);
+                        StartReceive(sendEa);
                     }
 
                     _responseReceived.WaitOne();
                 }
-
                 return null;
             });
         }
 
-        void SendRequestCompleted(object sender, SocketAsyncEventArgs sendEa)
+        void SendReceiveCompleted(object sender, SocketAsyncEventArgs sendEa)
         {
-            SendRequestCompleted(sendEa);
+            switch(sendEa.LastOperation)
+            {
+                case SocketAsyncOperation.Receive:
+                    ProcessResponse(sendEa);
+                    break;
+                case SocketAsyncOperation.Send:
+                    StartReceive(sendEa);
+                    break;
+            }
         }
 
-        void SendRequestCompleted(SocketAsyncEventArgs sendEa)
+        void StartReceive(SocketAsyncEventArgs sendEa)
         {
-            _clientSocket.Shutdown(SocketShutdown.Both);
-            _clientSocket.Close();
-            _clientSocket.Dispose();
-            _clientSocket = null;
+            _l.Info("Sending request completed.");
+            _l.Info("Received response from server.");
+            if (sendEa.SocketError == SocketError.Success)
+            {
+                if (!_clientSocket.ReceiveAsync(sendEa))
+                {
+                    ProcessResponse(sendEa);
+                }
+            } else
+            {
+                ProcessError(sendEa);
+            }
+        }
+
+        void ProcessResponse(SocketAsyncEventArgs readEa)
+        {
+            Token token = (Token)readEa.UserToken;
+
+            if (readEa.SocketError == SocketError.Success)
+            {
+                if (readEa.BytesTransferred > 0)
+                {
+                    _l.InfoFormat("Received {0} bytes from {1}.",
+                        readEa.BytesTransferred, token.Socket.LocalEndPoint);
+                    token.TotalBytes += readEa.BytesTransferred;
+                    token.BufferList.Add(new ArraySegment<byte>(readEa.Buffer, 0, readEa.BytesTransferred));
+                    if (token.Socket.Available == 0)
+                    {
+                        HandleResponse(token);
+                    }
+                    else if (!token.Socket.ReceiveAsync(readEa))
+                    {
+                        ProcessResponse(readEa);
+                    }
+                }
+            }
+            else
+            {
+                ProcessError(readEa);
+            }
+        }
+
+        void HandleResponse(Token token)
+        {
+            _l.Info("Response received. Closing socket.");
+            token.Socket.Shutdown(SocketShutdown.Both);
+            token.Socket.Close();
             _responseReceived.Set();
         }
 
+        void ProcessError(SocketAsyncEventArgs erroredEa)
+        {
+            _l.InfoFormat("Error on socket: {0}", erroredEa.SocketError);
+
+            Token token = erroredEa.UserToken as Token;
+
+            IPEndPoint localEp = token.Socket.LocalEndPoint as IPEndPoint;
+
+            _l.InfoFormat("Socket error {0} on endpoint {1} during {2}."
+                , erroredEa.SocketError, localEp, erroredEa.LastOperation);
+
+            token.Socket.Shutdown(SocketShutdown.Both);
+            token.Socket.Close();
+        }
+
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        bool disposedValue ;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -141,9 +211,16 @@
 
                 if(null != _clientSocket)
                 {
-                    _clientSocket.Shutdown(SocketShutdown.Both);
-                    _clientSocket.Close();
-                    _clientSocket.Dispose();
+                    try
+                    {
+                        _clientSocket.Shutdown(SocketShutdown.Both);
+                        _clientSocket.Close();
+                        _clientSocket.Dispose();
+                    }
+                    catch
+                    {
+                        //NOP.
+                    }
                 }
 
                 disposedValue = true;

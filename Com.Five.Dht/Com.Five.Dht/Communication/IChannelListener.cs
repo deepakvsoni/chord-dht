@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IRequestHandler
+    public interface IChannelListener
     {
-        Task<byte[]> Handle(IChannel channel, int totalBytes
+        Task<byte[]> HandleRequest(IChannel channel, int totalBytes
             , IList<ArraySegment<byte>> req);
     }
 }
