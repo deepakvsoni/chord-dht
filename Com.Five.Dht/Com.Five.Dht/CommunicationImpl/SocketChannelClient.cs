@@ -28,6 +28,8 @@
 
         Socket _clientSocket;
 
+        Response _response;
+
         public SocketChannelClient(Uri serverUri)
         {
             _serverUri = serverUri;
@@ -41,6 +43,9 @@
 
         public bool Connect()
         {
+            _l.InfoFormat("Attempting to connect to {0}."
+                , _serverUri);
+
             IPHostEntry entry = Dns.GetHostEntry(_serverUri.Host);
             IPAddress ipAddress = entry.AddressList[0];
             _serverEndpoint = new IPEndPoint(ipAddress, _serverUri.Port);
@@ -68,13 +73,17 @@
         
         void ClientConnected(SocketAsyncEventArgs connectedEa)
         {
-            if(connectedEa.SocketError != SocketError.Success)
+            if (connectedEa.SocketError != SocketError.Success)
             {
+                _l.ErrorFormat("Error connecting to endpoint {0}.",
+                    _serverUri);
                 _clientConnected.Set();
                 //TODO: Handle
                 return;
             }
             State = ConnectionState.Connected;
+            _l.InfoFormat("Connected to {0}, my Uri {1}.", _serverUri
+                , _clientSocket.LocalEndPoint);
 
             _clientConnected.Set();
         }
@@ -113,7 +122,7 @@
 
                     _responseReceived.WaitOne();
                 }
-                return null;
+                return _response;
             });
         }
 
@@ -157,7 +166,13 @@
                     _l.InfoFormat("Received {0} bytes from {1}.",
                         readEa.BytesTransferred, token.Socket.LocalEndPoint);
                     token.TotalBytes += readEa.BytesTransferred;
-                    token.BufferList.Add(new ArraySegment<byte>(readEa.Buffer, 0, readEa.BytesTransferred));
+
+                    byte[] bytes = new byte[readEa.BytesTransferred];
+                    Array.Copy(readEa.Buffer, bytes, readEa.BytesTransferred);
+
+                    token.BufferList.Add(new ArraySegment<byte>(
+                        bytes, readEa.Offset, readEa.BytesTransferred));
+
                     if (token.Socket.Available == 0)
                     {
                         HandleResponse(token);
@@ -177,20 +192,34 @@
         void HandleResponse(Token token)
         {
             _l.Info("Response received. Closing socket.");
+
+            using(MemoryStream stream = new MemoryStream(token.TotalBytes))
+            {
+                foreach(var segment in token.BufferList)
+                {
+                    stream.Write(segment.Array, segment.Offset, segment.Count);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                _response = (Response)_formatter.Deserialize(stream);
+            }
+
             token.Socket.Shutdown(SocketShutdown.Both);
             token.Socket.Close();
+
             _responseReceived.Set();
         }
 
         void ProcessError(SocketAsyncEventArgs erroredEa)
         {
-            _l.InfoFormat("Error on socket: {0}", erroredEa.SocketError);
+            _l.ErrorFormat("Error on socket: {0}", erroredEa.SocketError);
 
             Token token = erroredEa.UserToken as Token;
 
             IPEndPoint localEp = token.Socket.LocalEndPoint as IPEndPoint;
 
-            _l.InfoFormat("Socket error {0} on endpoint {1} during {2}."
+            _l.ErrorFormat("Socket error {0} on endpoint {1} during {2}."
                 , erroredEa.SocketError, localEp, erroredEa.LastOperation);
 
             token.Socket.Shutdown(SocketShutdown.Both);
@@ -214,13 +243,13 @@
                     try
                     {
                         _clientSocket.Shutdown(SocketShutdown.Both);
-                        _clientSocket.Close();
-                        _clientSocket.Dispose();
                     }
                     catch
                     {
                         //NOP.
                     }
+                    _clientSocket.Close();
+                    _clientSocket.Dispose();
                 }
 
                 disposedValue = true;

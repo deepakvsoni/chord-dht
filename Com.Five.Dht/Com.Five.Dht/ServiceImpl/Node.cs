@@ -74,5 +74,15 @@
         {
             return _requestHandler.Handle(channel, totalBytes, req);
         }
+
+        public void StateChange(State newState)
+        {
+            //NOP
+        }
+
+        public void HandleError(int errorCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

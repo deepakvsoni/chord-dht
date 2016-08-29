@@ -14,6 +14,8 @@
 
         IChannelClient Endpoint { get; }
 
+        Task<INode> GetSuccessor(Id id);
+
         Task<bool> Insert(Id id, string key, object val);
 
         Task<object> Lookup(Id id, string key);

@@ -6,6 +6,10 @@
 
     public interface IChannelListener
     {
+        void StateChange(State newState);
+
+        void HandleError(int errorCode);
+        
         Task<byte[]> HandleRequest(IChannel channel, int totalBytes
             , IList<ArraySegment<byte>> req);
     }

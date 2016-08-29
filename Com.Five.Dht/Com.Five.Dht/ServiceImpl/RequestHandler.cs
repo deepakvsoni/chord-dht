@@ -1,4 +1,4 @@
-﻿namespace Com.Five.Dht.CommunicationImpl
+﻿namespace Com.Five.Dht.ServiceImpl
 {
     using Communication;
     using System.Threading.Tasks;

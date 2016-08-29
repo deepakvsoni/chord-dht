@@ -29,13 +29,25 @@
 
         object _lock = new object();
 
+        State _state;
+
         List<Socket> _openSockets
             = new List<Socket>();
 
         public State State
         {
-            get;
-            private set;
+            get
+            {
+                return _state;
+            }
+            private set
+            {
+                _state = value;
+                if (null != _listener)
+                {
+                    _listener.StateChange(value);
+                }
+            }
         }
 
         public Uri Url
@@ -49,6 +61,19 @@
             if (null == url)
             {
                 throw new ArgumentNullException(nameof(url));
+            }
+            if (string.IsNullOrWhiteSpace(url.Scheme))
+            {
+                throw new ArgumentException("Scheme not defined for URL.");
+            }
+            if (0 != string.Compare(url.Scheme, "sock"
+                , StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException("Scheme not sock://.");
+            }
+            if(-1 == url.Port)
+            {
+                throw new ArgumentException("Port not defined.");
             }
             Url = url;
             _pool = new SocketAsyncEventArgsPool(url.AbsolutePath
@@ -81,52 +106,65 @@
             _socket = new Socket(AddressFamily.InterNetworkV6
                 , SocketType.Stream, ProtocolType.Tcp);
 
-            _socket.Bind(endpoint);
-            State = State.Open;
-
-            _socket.Listen(_maxConnections);
-            State = State.Listening;
-
-            _l.Info("Connection open and listening.");
-
-            SocketAsyncEventArgs acceptEa = new SocketAsyncEventArgs();
-            acceptEa.Completed += AcceptCompleted;
-
-            while (!_stopAcceptingToken.IsCancellationRequested)
+            try
             {
-                acceptEa.AcceptSocket = null;
+                _socket.Bind(endpoint);
+                State = State.Open;
 
-                if (!_socket.AcceptAsync(acceptEa))
+                _socket.Listen(_maxConnections);
+                State = State.Listening;
+
+                _l.Info("Connection open and listening.");
+
+                SocketAsyncEventArgs acceptEa = new SocketAsyncEventArgs();
+                acceptEa.Completed += AcceptCompleted;
+
+                while (!_stopAcceptingToken.IsCancellationRequested)
                 {
-                    ProcessAccept(acceptEa);
+                    acceptEa.AcceptSocket = null;
+
+                    if (!_socket.AcceptAsync(acceptEa))
+                    {
+                        ProcessAccept(acceptEa);
+                    }
+
+                    State = State.Accepting;
+
+                    WaitHandle.WaitAny(new[] { _stopAcceptingToken.Token.WaitHandle
+                , _acceptComplete }, -1);
                 }
 
-                State = State.Accepting;
+                State = State.NotOpen;
+                _l.InfoFormat("Shutting down channel {0}."
+                    , Url.AbsolutePath);
 
-                WaitHandle.WaitAny(new[] { _stopAcceptingToken.Token.WaitHandle
-                , _acceptComplete }, -1);
+                _socket.Close();
+                _socket.Dispose();
+                _socket = null;
+
+                _countdownEvent.Signal();
+
+                _l.InfoFormat("Waiting for {0} open sockets to close."
+                    , _openSockets.Count);
+
+                if (!_countdownEvent.Wait(10000))
+                {
+                    _l.Info("Wait for other open sockets timed out.");
+                    ForceCloseOpenSockets();
+                }
+
+                _l.Info("All connections closed. Bye!!.");
             }
-
-            State = State.NotOpen;
-            _l.InfoFormat("Shutting down channel {0}."
-                , Url.AbsolutePath);
-
-            _socket.Close();
-            _socket.Dispose();
-            _socket = null;
-
-            _countdownEvent.Signal();
-
-            _l.Info("Waiting for other open sockets to close.");
-
-            if(!_countdownEvent.Wait(10000))
+            catch (SocketException se)
             {
-                _l.Info("Wait for other open sockets timed out.");
+                _l.Error(se);
+                State = State.Error;
+                if (null != _listener)
+                {
+                    //Translate to generic error code to support different types.
+                    _listener.HandleError((int)se.SocketErrorCode);
+                }
             }
-
-            ForceCloseOpenSockets();
-
-            _l.Info("All connections closed. Bye!!.");
         }
 
         void AcceptCompleted(object sender, SocketAsyncEventArgs acceptEa)
@@ -139,7 +177,7 @@
             if (acceptEa.SocketError == SocketError.Success)
             {
                 _l.InfoFormat("Accepting Socket connection from {0}.",
-                    acceptEa.AcceptSocket.LocalEndPoint);
+                    acceptEa.AcceptSocket.RemoteEndPoint);
 
                 SocketAsyncEventArgs readEa = _pool.Pop();
                 ((Token)readEa.UserToken).Socket = acceptEa.AcceptSocket;
@@ -186,10 +224,14 @@
             {
                 if (readEa.BytesTransferred > 0)
                 {
-                    _l.InfoFormat("Received {0} bytes from {1}."
-                        , readEa.BytesTransferred, token.Socket.LocalEndPoint);
+                    _l.DebugFormat("Received {0} bytes from {1}."
+                        , readEa.BytesTransferred, token.Socket.RemoteEndPoint);
                     token.TotalBytes += readEa.BytesTransferred;
-                    token.BufferList.Add(new ArraySegment<byte>(readEa.Buffer
+
+                    byte[] bytes = new byte[readEa.BytesTransferred];
+                    Array.Copy(readEa.Buffer, bytes, readEa.BytesTransferred);
+
+                    token.BufferList.Add(new ArraySegment<byte>(bytes
                         , 0, readEa.BytesTransferred));
                     if (token.Socket.Available == 0)
                     {
@@ -204,16 +246,16 @@
             }
             else
             {
-                _l.InfoFormat("Error receiving data from Socket {0}."
-                    , token.Socket.LocalEndPoint);
+                _l.ErrorFormat("Error receiving data from Socket {0}."
+                    , token.Socket.RemoteEndPoint);
                 ProcessError(readEa);
             }
         }
 
         void HandleReceive(Token token)
         {
-            _l.InfoFormat("Receive complete. Handling request from {0}."
-                , token.Socket.LocalEndPoint);
+            _l.DebugFormat("Receive complete. Handling request from {0}."
+                , token.Socket.RemoteEndPoint);
             Task<byte[]> t = _listener.HandleRequest(this, token.TotalBytes,
                 token.BufferList);
 
@@ -224,8 +266,8 @@
 
         void Send(Token token, byte[] response)
         {
-            _l.InfoFormat("Sending response to {0}.",
-                token.Socket.LocalEndPoint);
+            _l.DebugFormat("Sending response to {0}.",
+                token.Socket.RemoteEndPoint);
 
             SocketAsyncEventArgs responseEa = _pool.Pop();
             responseEa.SetBuffer(response, 0, response.Length);
@@ -240,14 +282,14 @@
 
             if (sendEa.SocketError == SocketError.Success)
             {
-                _l.InfoFormat("Send response to {0} completed."
-                    , token.Socket.LocalEndPoint);
+                _l.DebugFormat("Send response to {0} completed."
+                    , token.Socket.RemoteEndPoint);
                 CloseSocket(token, sendEa);
             }
             else
             {
-                _l.InfoFormat("Send response to {0} errored."
-                    , token.Socket.LocalEndPoint);
+                _l.ErrorFormat("Send response to {0} errored."
+                    , token.Socket.RemoteEndPoint);
                 ProcessError(sendEa);
             }
         }
@@ -256,9 +298,9 @@
         {
             Token token = erroredEa.UserToken as Token;
 
-            IPEndPoint localEp = token.Socket.LocalEndPoint as IPEndPoint;
+            IPEndPoint localEp = token.Socket.RemoteEndPoint as IPEndPoint;
 
-            _l.InfoFormat("Socket error {0} on endpoint {1} during {2}."
+            _l.ErrorFormat("Socket error {0} on endpoint {1} during {2}."
                 , erroredEa.SocketError, localEp, erroredEa.LastOperation);
 
             CloseSocket(token, erroredEa);
@@ -266,8 +308,8 @@
 
         void CloseSocket(Token token, SocketAsyncEventArgs ea)
         {
-            _l.InfoFormat("Closing connection {0}."
-                , token.Socket.LocalEndPoint);
+            _l.DebugFormat("Closing connection {0}."
+                , token.Socket.RemoteEndPoint);
             try
             {
                 if (token.Socket.Connected)

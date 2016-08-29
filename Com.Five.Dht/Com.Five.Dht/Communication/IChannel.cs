@@ -7,7 +7,8 @@
         NotOpen,
         Open,
         Listening,
-        Accepting
+        Accepting,
+        Error
     }
 
     public interface IChannel

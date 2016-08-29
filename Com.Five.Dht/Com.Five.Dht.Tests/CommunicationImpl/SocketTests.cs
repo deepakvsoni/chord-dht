@@ -12,25 +12,42 @@
     using System.Collections.Generic;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.IO;
+    using Communication.Responses;
+    using System.Text;
 
     [TestFixture]
     public class SocketTests
     {
         Uri _serverUri = new Uri("sock://localhost:10000");
 
-        byte[] shutdownBytes;
+        byte[] shutdownResponseBytes, insertResponseBytes;
 
         [SetUp]
         public void Setup()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using(MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
-                formatter.Serialize(ms, new Shutdown());
+                formatter.Serialize(ms, new ShutdownResponse
+                {
+                    Status = Status.Ok,
+                    ShutdownAccepted = true
+                });
 
                 ms.Seek(0, SeekOrigin.Begin);
 
-                shutdownBytes = ms.GetBuffer();
+                shutdownResponseBytes = ms.GetBuffer();
+            }
+            using (MemoryStream ms = new MemoryStream())
+            {
+                formatter.Serialize(ms, new InsertResponse
+                {
+                    Status = Status.Ok
+                });
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                insertResponseBytes = ms.GetBuffer();
             }
         }
 
@@ -38,45 +55,100 @@
         [Test]
         public async Task SocketCommunication_StartShutdown()
         {
-            AutoResetEvent _listening = new AutoResetEvent(false);
+            AutoResetEvent _accepting = new AutoResetEvent(false);
+            AutoResetEvent _notopen = new AutoResetEvent(false);
             SocketChannel channel = new SocketChannel(_serverUri);
-            int count = 0;
 
             IChannelListener listener = Substitute.For<IChannelListener>();
 
             listener.HandleRequest(channel, Arg.Any<int>(),
                Arg.Any<IList<ArraySegment<byte>>>())
-               .Returns(shutdownBytes)
+               .Returns(shutdownResponseBytes)
                .AndDoes((p) =>
                {
                    IChannel c = (IChannel)p[0];
                    c.RequestClose();
                });
+            listener.When(x => x.StateChange(State.Accepting))
+                .Do(x => _accepting.Set());
+            listener.When(x => x.StateChange(State.NotOpen))
+                .Do(x => _notopen.Set());
 
             channel.RegisterChannelListener(listener);
 
             channel.Open();
-            count = 0;
 
-            while ((++count) != 5
-            && channel.State != State.Accepting)
-            {
-                Task.Delay(500).Wait();
-            }
+            _accepting.WaitOne(10000);
+
             channel.State.Should().Be(State.Accepting);
 
             SocketChannelClient client = new SocketChannelClient(_serverUri);
             client.Connect().Should().BeTrue();
 
-            await client.SendRequest(new Shutdown());
+            Response response = await client.SendRequest(new Shutdown());
 
-            count = 0;
+            response.Should().BeOfType<ShutdownResponse>();
+            response.Status.Should().Be(Status.Ok);
+            ((ShutdownResponse)response).ShutdownAccepted.Should().BeTrue();
 
-            while ((++count) != 5
-            && channel.State != State.NotOpen)
+            _notopen.WaitOne(10000);
+
+            channel.State.Should().Be(State.NotOpen);
+        }
+
+        [Category("Integration")]
+        [Test]
+        public async Task SocketCommunication_Insert()
+        {
+            AutoResetEvent _accepting = new AutoResetEvent(false);
+            AutoResetEvent _notopen = new AutoResetEvent(false);
+            SocketChannel channel = new SocketChannel(_serverUri);
+
+            IChannelListener listener = Substitute.For<IChannelListener>();
+
+            listener.HandleRequest(channel, Arg.Any<int>(),
+               Arg.Any<IList<ArraySegment<byte>>>())
+               .Returns(insertResponseBytes)
+               .AndDoes((p) =>
+               {
+                   IChannel c = (IChannel)p[0];
+                   c.RequestClose();
+               });
+            listener.When(x => x.StateChange(State.Accepting))
+                .Do(x => _accepting.Set());
+            listener.When(x => x.StateChange(State.NotOpen))
+                .Do(x => _notopen.Set());
+
+            channel.RegisterChannelListener(listener);
+
+            channel.Open();
+
+            _accepting.WaitOne(10000);
+
+            channel.State.Should().Be(State.Accepting);
+
+            SocketChannelClient client = new SocketChannelClient(_serverUri);
+            client.Connect().Should().BeTrue();
+
+            Insert insert = new Insert
             {
-                await Task.Delay(500);
+                Key = "ABC"
+            };
+
+            StringBuilder s = new StringBuilder(2048);
+            for(int i = 0; i < 2048; ++i)
+            {
+                s.Append("#");
             }
+            insert.Value = s.ToString();
+
+            Response response = await client.SendRequest(insert);
+
+            response.Should().BeOfType<InsertResponse>();
+            response.Status.Should().Be(Status.Ok);
+
+            _notopen.WaitOne(10000);
+
             channel.State.Should().Be(State.NotOpen);
         }
     }

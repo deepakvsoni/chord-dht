@@ -51,6 +51,7 @@
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPool.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClient.cs" />
     <Compile Include="CommunicationImpl\SocketChannel.cs" />
+    <Compile Include="ServiceImpl\NodeBuilder.cs" />
     <Compile Include="ServiceImpl\RequestHandler.cs" />
     <Compile Include="CommunicationImpl\Token.cs" />
     <Compile Include="Communication\IChannelClient.cs" />

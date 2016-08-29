@@ -27,6 +27,11 @@
             }
         }
 
+        public Task<INode> GetSuccessor(Id id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> Insert(Id id, string key, object val)
         {
             throw new NotImplementedException();

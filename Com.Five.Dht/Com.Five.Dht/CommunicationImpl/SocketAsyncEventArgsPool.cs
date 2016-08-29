@@ -69,7 +69,7 @@
                     SocketAsyncEventArgs ea = new SocketAsyncEventArgs();
                     ea.Completed += _completed;
                     ea.UserToken = new Token();
-                    ea.SetBuffer(new byte[1024], 0, 1024);
+                    ea.SetBuffer(new byte[256], 0, 256);
                     _pool.Push(ea);
                 }
                 _l.InfoFormat(
