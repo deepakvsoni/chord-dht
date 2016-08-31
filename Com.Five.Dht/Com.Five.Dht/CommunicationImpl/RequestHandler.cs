@@ -48,7 +48,7 @@
             {
                 reqObj = (Request)_formatter.GetObject(totalBytes
                     , req);
-                _l.InfoFormat("Received request: {0}", req);
+                _l.InfoFormat("Received request: {0}", reqObj);
             }
             catch (InvalidCastException e)
             {
