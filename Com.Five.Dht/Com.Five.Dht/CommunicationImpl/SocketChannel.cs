@@ -15,7 +15,7 @@
 
         int _maxConnections = 15;
 
-        AutoResetEvent _acceptComplete = new AutoResetEvent(false);
+        ManualResetEventSlim _acceptComplete = new ManualResetEventSlim(false);
         CountdownEvent _countdownEvent = new CountdownEvent(1);
 
         Socket _socket;
@@ -27,12 +27,11 @@
 
         IChannelListener _listener;
 
-        object _lock = new object();
-
         State _state;
 
-        List<Socket> _openSockets
-            = new List<Socket>();
+        object _lock = new object();
+        
+        List<Socket> _openSockets = new List<Socket>();
 
         public State State
         {
@@ -92,10 +91,10 @@
 
         public void Open()
         {
-            ThreadPool.QueueUserWorkItem(OpenSocketAndAcceptCalls);
+            Task.Factory.StartNew(() => OpenSocketAndAcceptCalls());
         }
 
-        void OpenSocketAndAcceptCalls(object p)
+        void OpenSocketAndAcceptCalls()
         {
             _l.InfoFormat("Opening endpoint @{0}", Url);
 
@@ -130,11 +129,15 @@
 
                     State = State.Accepting;
 
-                    WaitHandle.WaitAny(new[] { _stopAcceptingToken.Token.WaitHandle
-                , _acceptComplete }, -1);
+                    WaitHandle.WaitAny(new[] {
+                        _stopAcceptingToken.Token.WaitHandle,
+                        _acceptComplete.WaitHandle
+                    }, -1);
+
+                    _acceptComplete.Reset();
                 }
 
-                State = State.NotOpen;
+                State = State.NotAccepting;
                 _l.InfoFormat("Shutting down channel {0}."
                     , Url.AbsolutePath);
 
@@ -149,9 +152,10 @@
 
                 if (!_countdownEvent.Wait(10000))
                 {
-                    _l.Info("Wait for other open sockets timed out.");
+                    _l.Info("Wait for other open sockets to close timed out.");
                     ForceCloseOpenSockets();
                 }
+                State = State.NotOpen;
 
                 _l.Info("All connections closed. Bye!!.");
             }
@@ -256,7 +260,7 @@
         {
             _l.DebugFormat("Receive complete. Handling request from {0}."
                 , token.Socket.RemoteEndPoint);
-            Task<byte[]> t = _listener.HandleRequest(this, token.TotalBytes,
+            Task<byte[]> t = _listener.HandleRequest(token.TotalBytes,
                 token.BufferList);
 
             byte[] response = t.Result;
@@ -348,7 +352,8 @@
             {
                 try
                 {
-                    _l.Info("Forcing close of socket.");
+                    _l.InfoFormat("Forcing close socket {0}."
+                        , socket.RemoteEndPoint);
 
                     if (socket.Connected)
                     {
@@ -371,10 +376,6 @@
         {
             if (!disposedValue)
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
                 if (null != _socket)
                 {
                     _socket.Close();

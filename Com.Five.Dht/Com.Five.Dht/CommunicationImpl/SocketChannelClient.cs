@@ -16,8 +16,8 @@
     {
         ILog _l = LogManager.GetLogger(typeof(SocketChannelClient));
 
-        AutoResetEvent _clientConnected = new AutoResetEvent(false),
-            _responseReceived = new AutoResetEvent(false);
+        ManualResetEventSlim _clientConnected = new ManualResetEventSlim(false),
+            _responseReceived = new ManualResetEventSlim(false);
 
         //TODO: Refactor message format type and handler.
         BinaryFormatter _formatter = new BinaryFormatter();
@@ -62,7 +62,8 @@
                 ClientConnected(ea);
             }
 
-            _clientConnected.WaitOne();
+            _clientConnected.Wait();
+            _clientConnected.Reset();
             return _clientSocket.Connected;
         }
 
@@ -120,7 +121,8 @@
                         StartReceive(sendEa);
                     }
 
-                    _responseReceived.WaitOne();
+                    _responseReceived.Wait();
+                    _responseReceived.Reset();
                 }
                 return _response;
             });
@@ -233,20 +235,15 @@
         {
             if (!disposedValue)
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
                 if(null != _clientSocket)
                 {
                     try
                     {
                         _clientSocket.Shutdown(SocketShutdown.Both);
                     }
-                    catch
+                    catch(Exception e)
                     {
-                        //NOP.
+                        _l.Error(e);
                     }
                     _clientSocket.Close();
                     _clientSocket.Dispose();

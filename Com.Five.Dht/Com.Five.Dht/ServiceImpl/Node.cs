@@ -10,20 +10,20 @@
     public class Node : INode, IChannelListener
     {
         Id _id;
-        IChannel _endpoint;
-        IDataEntries _entries;
+        Uri _bootstrapUri;
+        IChannel _channel;
         IRequestHandler _requestHandler;
                 
-        public Node(Id id, IChannel endpoint, IDataEntries entries
-            , IRequestHandler requestHandler)
+        public Node(Id id, Uri bootstrapUri, IChannel channel
+            , IDataEntries entries, IRequestHandler requestHandler)
         {
             if(null == id)
             {
                 throw new ArgumentNullException(nameof(id));
             }
-            if (null == endpoint)
+            if (null == channel)
             {
-                throw new ArgumentNullException(nameof(endpoint));
+                throw new ArgumentNullException(nameof(channel));
             }
             if (null == entries)
             {
@@ -34,18 +34,18 @@
                 throw new ArgumentNullException(nameof(requestHandler));
             }
             _id = id;
-            _endpoint = endpoint;
-            _entries = entries;
+            _channel = channel;
+            Entries = entries;
             _requestHandler = requestHandler;
-
-            _endpoint.RegisterChannelListener(this);
+            _bootstrapUri = bootstrapUri;
+            _channel.RegisterChannelListener(this);
         }
 
-        public IChannel Endpoint
+        public IChannel Channel
         {
             get
             {
-                return _endpoint;
+                return _channel;
             }
         }
 
@@ -55,6 +55,12 @@
             {
                 return _id;
             }
+        }
+
+        public IDataEntries Entries
+        {
+            get;
+            private set;
         }
 
         public INode Predecessor
@@ -69,20 +75,25 @@
             private set;
         }
 
-        public Task<byte[]> HandleRequest(IChannel channel, int totalBytes
+        public Task<byte[]> HandleRequest(int totalBytes
             , IList<ArraySegment<byte>> req)
         {
-            return _requestHandler.Handle(channel, totalBytes, req);
+            return _requestHandler.Handle(totalBytes, req);
         }
 
         public void StateChange(State newState)
         {
-            //NOP
+            //TBD
         }
 
         public void HandleError(int errorCode)
         {
-            throw new NotImplementedException();
+            //TBD
+        }
+
+        public void RequestShutdown()
+        {
+            _channel.RequestClose();
         }
     }
 }

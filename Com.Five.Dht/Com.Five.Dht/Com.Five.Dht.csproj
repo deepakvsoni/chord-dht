@@ -48,11 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunicationImpl\RequestResponseBinaryFormatter.cs" />
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPool.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClient.cs" />
     <Compile Include="CommunicationImpl\SocketChannel.cs" />
+    <Compile Include="Communication\IRequestResponseFormatter.cs" />
+    <Compile Include="Communication\Responses\GetResponse.cs" />
+    <Compile Include="Communication\Responses\RemoveResponse.cs" />
     <Compile Include="ServiceImpl\NodeBuilder.cs" />
-    <Compile Include="ServiceImpl\RequestHandler.cs" />
+    <Compile Include="CommunicationImpl\RequestHandler.cs" />
     <Compile Include="CommunicationImpl\Token.cs" />
     <Compile Include="Communication\IChannelClient.cs" />
     <Compile Include="Communication\IChannel.cs" />
@@ -60,10 +64,10 @@
     <Compile Include="Communication\IRequestHandler.cs" />
     <Compile Include="Communication\Requests\Remove.cs" />
     <Compile Include="Communication\Requests\Request.cs" />
-    <Compile Include="Communication\Requests\Insert.cs" />
-    <Compile Include="Communication\Requests\Lookup.cs" />
+    <Compile Include="Communication\Requests\Put.cs" />
+    <Compile Include="Communication\Requests\Get.cs" />
     <Compile Include="Communication\Requests\Shutdown.cs" />
-    <Compile Include="Communication\Responses\InsertResponse.cs" />
+    <Compile Include="Communication\Responses\PutResponse.cs" />
     <Compile Include="Communication\Responses\InternalError.cs" />
     <Compile Include="Communication\Responses\InvalidRequest.cs" />
     <Compile Include="Communication\Responses\Response.cs" />

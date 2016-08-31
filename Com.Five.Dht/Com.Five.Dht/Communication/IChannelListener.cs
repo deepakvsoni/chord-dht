@@ -10,7 +10,7 @@
 
         void HandleError(int errorCode);
         
-        Task<byte[]> HandleRequest(IChannel channel, int totalBytes
+        Task<byte[]> HandleRequest(int totalBytes
             , IList<ArraySegment<byte>> req);
     }
 }

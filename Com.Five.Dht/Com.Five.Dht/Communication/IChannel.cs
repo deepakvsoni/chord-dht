@@ -8,6 +8,7 @@
         Open,
         Listening,
         Accepting,
+        NotAccepting,
         Error
     }
 

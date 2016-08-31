@@ -3,9 +3,9 @@
     using System;
 
     [Serializable]
-    public class Lookup : Request
+    public class Get : Request
     {
-        string Key
+        public string Key
         {
             get;
             set;

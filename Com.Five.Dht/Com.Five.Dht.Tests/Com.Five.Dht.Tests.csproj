@@ -96,14 +96,16 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="CommunicationImpl\RequestResponseBinaryFormatterTests.cs" />
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPoolTests.cs" />
     <Compile Include="CommunicationImpl\SocketChannelTests.cs" />
     <Compile Include="CommunicationImpl\SocketTests.cs" />
     <Compile Include="Data\IdTests.cs" />
     <Compile Include="DataImpl\SHA1HashFunctionTests.cs" />
-    <Compile Include="DataImpl\StringKeyDataEntriesTests.cs" />
+    <Compile Include="DataImpl\DataEntriesTests.cs" />
     <Compile Include="AssemblySetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceImpl\NodeBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Com.Five.Dht\Com.Five.Dht.csproj">

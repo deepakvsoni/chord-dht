@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class Insert : Request
+    public class Put : Request
     {
         public string Key
         {

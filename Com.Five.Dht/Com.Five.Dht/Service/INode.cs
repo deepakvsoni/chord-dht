@@ -2,14 +2,20 @@
 {
     using Communication;
     using Data;
-    using System.Threading.Tasks;
+    using System.Collections.Generic;
 
     public interface INode
     {
         Id Id { get; }
 
-        IChannel Endpoint { get; }
+        IChannel Channel { get; }
+
+        IDataEntries Entries { get; }
 
         INode Predecessor { get; set; }
+
+        ICollection<INode> Successors { get; }
+
+        void RequestShutdown();
     }
 }

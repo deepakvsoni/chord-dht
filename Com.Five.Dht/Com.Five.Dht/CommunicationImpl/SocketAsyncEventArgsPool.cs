@@ -69,7 +69,7 @@
                     SocketAsyncEventArgs ea = new SocketAsyncEventArgs();
                     ea.Completed += _completed;
                     ea.UserToken = new Token();
-                    ea.SetBuffer(new byte[256], 0, 256);
+                    ea.SetBuffer(new byte[1024], 0, 1024);
                     _pool.Push(ea);
                 }
                 _l.InfoFormat(
@@ -87,7 +87,7 @@
                 }
             }
             _l.InfoFormat(
-                "SocketAsyncEventArgs Pool {0} has not available args object."
+                "SocketAsyncEventArgs Pool {0} has no available args object."
                 , Id);
             return null;
         }

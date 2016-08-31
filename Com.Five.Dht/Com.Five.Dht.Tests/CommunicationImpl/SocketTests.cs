@@ -40,7 +40,7 @@
             }
             using (MemoryStream ms = new MemoryStream())
             {
-                formatter.Serialize(ms, new InsertResponse
+                formatter.Serialize(ms, new PutResponse
                 {
                     Status = Status.Ok
                 });
@@ -61,13 +61,12 @@
 
             IChannelListener listener = Substitute.For<IChannelListener>();
 
-            listener.HandleRequest(channel, Arg.Any<int>(),
+            listener.HandleRequest(Arg.Any<int>(),
                Arg.Any<IList<ArraySegment<byte>>>())
                .Returns(shutdownResponseBytes)
                .AndDoes((p) =>
                {
-                   IChannel c = (IChannel)p[0];
-                   c.RequestClose();
+                   channel.RequestClose();
                });
             listener.When(x => x.StateChange(State.Accepting))
                 .Do(x => _accepting.Set());
@@ -95,7 +94,7 @@
 
             channel.State.Should().Be(State.NotOpen);
         }
-
+        
         [Category("Integration")]
         [Test]
         public async Task SocketCommunication_Insert()
@@ -106,13 +105,12 @@
 
             IChannelListener listener = Substitute.For<IChannelListener>();
 
-            listener.HandleRequest(channel, Arg.Any<int>(),
+            listener.HandleRequest(Arg.Any<int>(),
                Arg.Any<IList<ArraySegment<byte>>>())
                .Returns(insertResponseBytes)
                .AndDoes((p) =>
                {
-                   IChannel c = (IChannel)p[0];
-                   c.RequestClose();
+                   channel.RequestClose();
                });
             listener.When(x => x.StateChange(State.Accepting))
                 .Do(x => _accepting.Set());
@@ -130,7 +128,7 @@
             SocketChannelClient client = new SocketChannelClient(_serverUri);
             client.Connect().Should().BeTrue();
 
-            Insert insert = new Insert
+            Put insert = new Put
             {
                 Key = "ABC"
             };
@@ -144,10 +142,79 @@
 
             Response response = await client.SendRequest(insert);
 
-            response.Should().BeOfType<InsertResponse>();
+            response.Should().BeOfType<PutResponse>();
             response.Status.Should().Be(Status.Ok);
 
             _notopen.WaitOne(10000);
+
+            channel.State.Should().Be(State.NotOpen);
+        }
+
+        [Category("Integration")]
+        [Test]
+        public void SocketCommunication_StartForceClose()
+        {
+            AutoResetEvent _accepting = new AutoResetEvent(false);
+            AutoResetEvent _notopen = new AutoResetEvent(false);
+            SocketChannel channel = new SocketChannel(_serverUri);
+
+            IChannelListener listener = Substitute.For<IChannelListener>();
+            
+            listener.When(x => x.StateChange(State.Accepting))
+                .Do(x => _accepting.Set());
+            listener.When(x => x.StateChange(State.NotOpen))
+                .Do(x => _notopen.Set());
+
+            channel.RegisterChannelListener(listener);
+
+            channel.Open();
+
+            _accepting.WaitOne(10000);
+
+            channel.State.Should().Be(State.Accepting);
+
+            SocketChannelClient client = new SocketChannelClient(_serverUri);
+            client.Connect().Should().BeTrue();
+
+            channel.RequestClose();
+            
+            _notopen.WaitOne(20000);
+
+            channel.State.Should().Be(State.NotOpen);
+        }
+
+        [Category("Integration")]
+        [Test]
+        public void SocketCommunication_StartForceClose2Client()
+        {
+            AutoResetEvent _accepting = new AutoResetEvent(false);
+            AutoResetEvent _notopen = new AutoResetEvent(false);
+            SocketChannel channel = new SocketChannel(_serverUri);
+
+            IChannelListener listener = Substitute.For<IChannelListener>();
+
+            listener.When(x => x.StateChange(State.Accepting))
+                .Do(x => _accepting.Set());
+            listener.When(x => x.StateChange(State.NotOpen))
+                .Do(x => _notopen.Set());
+
+            channel.RegisterChannelListener(listener);
+
+            channel.Open();
+
+            _accepting.WaitOne(10000);
+
+            channel.State.Should().Be(State.Accepting);
+
+            SocketChannelClient client = new SocketChannelClient(_serverUri);
+            client.Connect().Should().BeTrue();
+
+            SocketChannelClient client2 = new SocketChannelClient(_serverUri);
+            client2.Connect().Should().BeTrue();
+
+            channel.RequestClose();
+
+            _notopen.WaitOne(20000);
 
             channel.State.Should().Be(State.NotOpen);
         }

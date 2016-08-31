@@ -4,10 +4,10 @@
 
     public interface IDataEntries
     {
-        Task<bool> Insert(Id id, string key, object val);
+        Task<bool> Put(string key, object val);
 
-        Task<object> Lookup(Id id, string key);
+        Task<object> Get(string key);
 
-        Task Remove(Id id, string key);
+        Task<bool> Remove(string key);
     }
 }

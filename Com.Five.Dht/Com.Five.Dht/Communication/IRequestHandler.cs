@@ -6,7 +6,7 @@
 
     public interface IRequestHandler
     {
-        Task<byte[]> Handle(IChannel channel, int totalBytes
+        Task<byte[]> Handle(int totalBytes
             , IList<ArraySegment<byte>> req);
     }
 }
