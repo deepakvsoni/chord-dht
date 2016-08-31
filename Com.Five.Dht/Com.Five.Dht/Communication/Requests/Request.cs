@@ -6,6 +6,5 @@
     [Serializable]
     public abstract class Request
     {
-        public Id Id { get; set; }
     }
 }

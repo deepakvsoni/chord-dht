@@ -28,6 +28,10 @@
 
         public RequestHandler(IRequestResponseFormatter formatter)
         {
+            if(null == formatter)
+            {
+                throw new ArgumentNullException(nameof(formatter));
+            }
             _formatter = formatter;
 
             _handlers[typeof(Shutdown)] = HandleShutdown;
@@ -39,9 +43,10 @@
         public async Task<byte[]> Handle(int totalBytes
             , IList<ArraySegment<byte>> req)
         {
+            Request reqObj = null;
             try
             {
-                Request reqObj = (Request)_formatter.GetObject(totalBytes
+                reqObj = (Request)_formatter.GetObject(totalBytes
                     , req);
                 _l.InfoFormat("Received request: {0}", req);
             }
@@ -50,20 +55,20 @@
                 _l.Error("Invalid type of request received.", e);
             }
             Response res = null;
-            if (null == req)
+            if (null == reqObj)
             {
                 res = InvalidRequest.I;
                 return _formatter.GetBytes(res);
             }
 
             Handler handler;
-            if (!_handlers.TryGetValue(req.GetType(), out handler))
+            if (!_handlers.TryGetValue(reqObj.GetType(), out handler))
             {
                 res = InvalidRequest.I;
                 return _formatter.GetBytes(res);
             }
 
-            res = await handler((Request)req);
+            res = await handler(reqObj);
 
             return _formatter.GetBytes(res);
         }
@@ -79,7 +84,7 @@
 
         async Task<Response> HandlePut(Request request)
         {
-            //This should find successor etc.
+            //TODO: This should find the actual node.
             Put put = (Put)request;
             bool putSuccess = await Node.Entries.Put(put.Key, put.Value);
 
