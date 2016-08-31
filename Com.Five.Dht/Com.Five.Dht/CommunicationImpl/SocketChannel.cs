@@ -348,7 +348,7 @@
 
         void ForceCloseOpenSockets()
         {
-            foreach (var socket in _openSockets)
+            foreach (Socket socket in _openSockets)
             {
                 try
                 {

@@ -44,7 +44,7 @@
 
             byte[] bytes = formatter.GetBytes(req);
 
-            var obj = formatter.GetObject(bytes.Length
+            object obj = formatter.GetObject(bytes.Length
                 , new List<ArraySegment<byte>>(
                     new[] { new ArraySegment<byte>(bytes)}));
 

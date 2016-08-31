@@ -197,7 +197,7 @@
 
             using(MemoryStream stream = new MemoryStream(token.TotalBytes))
             {
-                foreach(var segment in token.BufferList)
+                foreach(ArraySegment<byte> segment in token.BufferList)
                 {
                     stream.Write(segment.Array, segment.Offset, segment.Count);
                 }

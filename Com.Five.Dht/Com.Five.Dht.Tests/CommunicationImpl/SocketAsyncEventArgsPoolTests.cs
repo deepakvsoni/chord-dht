@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Net.Sockets;
 
     [TestFixture]
     public class SocketAsyncEventArgsPoolTests
@@ -116,7 +117,7 @@
                 Guid.NewGuid().ToString(), 10, null);
             pool.Initialize();
 
-            var popped = pool.Pop();
+            SocketAsyncEventArgs popped = pool.Pop();
             pool.Count.Should().Be(9);
 
             pool.Push(popped);
@@ -134,7 +135,7 @@
 
             Action a = () =>
             {
-                var p1 = pool.Pop();
+                SocketAsyncEventArgs p1 = pool.Pop();
                 pool.Push(p1);
             };
 
@@ -151,7 +152,7 @@
                 Guid.NewGuid().ToString(), 10, null);
             pool.Initialize();
 
-            var popped = pool.Pop();
+            SocketAsyncEventArgs popped = pool.Pop();
 
             Action a = () => pool.Push(null);
             a.ShouldThrow<ArgumentNullException> ();
