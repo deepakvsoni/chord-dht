@@ -7,6 +7,7 @@
     using Service;
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
     using System.Threading.Tasks;
 
     public class RequestHandler : IRequestHandler
@@ -38,12 +39,15 @@
             _handlers[typeof(Put)] = HandlePut;
             _handlers[typeof(Get)] = HandleGet;
             _handlers[typeof(Remove)] = HandleRemove;
+            _handlers[typeof(Ping)] = HandlePing;
+            _handlers[typeof(Join)] = HandleJoin;
         }
 
         public async Task<byte[]> Handle(int totalBytes
             , IList<ArraySegment<byte>> req)
         {
             Request reqObj = null;
+            Response res = null;
             try
             {
                 reqObj = (Request)_formatter.GetObject(totalBytes
@@ -53,18 +57,28 @@
             catch (InvalidCastException e)
             {
                 _l.Error("Invalid type of request received.", e);
+
+                res = InvalidRequestResponse.I;
+                return _formatter.GetBytes(res);
             }
-            Response res = null;
-            if (null == reqObj)
+            catch(SerializationException ser)
             {
-                res = InvalidRequest.I;
+                _l.Error("Empty request received.", ser);
+
+                res = InvalidRequestResponse.I;
+                return _formatter.GetBytes(res);
+            }
+            catch (Exception e2)
+            {
+                _l.Error("Unknown error.", e2);
+                res = InternalErrorResponse.I;
                 return _formatter.GetBytes(res);
             }
 
             Handler handler;
             if (!_handlers.TryGetValue(reqObj.GetType(), out handler))
             {
-                res = InvalidRequest.I;
+                res = InvalidRequestResponse.I;
                 return _formatter.GetBytes(res);
             }
 
@@ -108,6 +122,22 @@
             bool removed = await Node.Entries.Remove(remove.Key);
             return removed ? RemoveResponse.Success 
                 : RemoveResponse.Failed;
+        }
+
+        Task<Response> HandlePing(Request request)
+        {
+            return Task.Factory.StartNew<Response>(() =>
+            {
+                return PingResponse.Alive;
+            });
+        }
+
+        Task<Response> HandleJoin(Request request)
+        {
+            return Task.Factory.StartNew<Response>(() =>
+            {
+                return new JoinResponse();
+            });
         }
     }
 }

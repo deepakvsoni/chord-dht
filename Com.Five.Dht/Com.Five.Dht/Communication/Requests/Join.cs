@@ -3,7 +3,7 @@
     using System;
 
     [Serializable]
-    public abstract class Request
+    public class Join : Request
     {
     }
 }

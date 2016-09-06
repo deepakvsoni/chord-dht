@@ -61,10 +61,6 @@
             {
                 throw new ArgumentNullException(nameof(url));
             }
-            if (string.IsNullOrWhiteSpace(url.Scheme))
-            {
-                throw new ArgumentException("Scheme not defined for URL.");
-            }
             if (0 != string.Compare(url.Scheme, "sock"
                 , StringComparison.OrdinalIgnoreCase))
             {
@@ -376,12 +372,17 @@
         {
             if (!disposedValue)
             {
-                if (null != _socket)
+                if (disposing)
                 {
-                    _socket.Close();
-                    _socket.Dispose();
+                    if (null != _socket)
+                    {
+                        _socket.Close();
+                        _socket.Dispose();
+                    }
+                    _acceptComplete.Dispose();
+                    _countdownEvent.Dispose();
+                    _stopAcceptingToken.Dispose();
                 }
-
                 disposedValue = true;
             }
         }

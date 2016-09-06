@@ -7,6 +7,8 @@
     {
         object GetObject(int totalBytes, IList<ArraySegment<byte>> bytes);
 
+        object GetObject(byte[] bytes);
+
         byte[] GetBytes(object obj);
     }
 }

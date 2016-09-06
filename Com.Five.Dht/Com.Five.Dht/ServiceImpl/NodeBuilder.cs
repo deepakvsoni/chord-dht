@@ -17,17 +17,11 @@
 
         IRequestResponseFormatter _requestResponseFormatter;
 
-        Uri _uri, _bootstrapUri;
+        Uri _uri;
 
         public NodeBuilder SetUri(Uri uri)
         {
             _uri = uri;
-            return this;
-        }
-
-        public NodeBuilder SetBootstrapUri(Uri bootstrapUri)
-        {
-            _bootstrapUri = bootstrapUri;
             return this;
         }
 
@@ -74,7 +68,7 @@
             Id id = new Id(Encoding.UTF8.GetBytes(_uri.AbsolutePath + ":"
                 + _uri.Port));
 
-            Node node = new Node(id, _bootstrapUri, channel, dataEntries
+            Node node = new Node(id, channel, dataEntries
                 , requestHandler);
             return node;
         }

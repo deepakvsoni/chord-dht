@@ -92,17 +92,6 @@
 
         [Category("Unit")]
         [Test]
-        public void NodeBuilder_SetBootstrapUri()
-        {
-            NodeBuilder b = new NodeBuilder();
-            Action a = () =>
-                b.SetBootstrapUri(new Uri("sock://localhost:5001"));
-            a.ShouldNotThrow();
-        }
-
-
-        [Category("Unit")]
-        [Test]
         public void NodeBuilder_SetChannel()
         {
             NodeBuilder b = new NodeBuilder();
@@ -127,7 +116,6 @@
             NodeBuilder b = new NodeBuilder();
             Action a = () =>
                 b.SetUri(new Uri("sock://localhost:5000"))
-                    .SetBootstrapUri(new Uri("sock://localhost:5001"))
                     .SetChannel(new SocketChannel(
                         new Uri("sock://localhost:5000")))
                     .SetDataEntries(new DataEntries())

@@ -17,6 +17,6 @@
 
         bool Connect();
 
-        Task<Response> SendRequest(Request message);
+        Task<byte[]> SendRequest(byte[] message);
     }
 }

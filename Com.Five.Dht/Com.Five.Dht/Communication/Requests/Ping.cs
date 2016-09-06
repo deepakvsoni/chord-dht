@@ -3,7 +3,8 @@
     using System;
 
     [Serializable]
-    public abstract class Request
+    public class Ping : Request
     {
+        public static readonly Ping I = new Ping();
     }
 }

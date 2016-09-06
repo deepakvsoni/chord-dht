@@ -1,119 +1,154 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Com.Five.Dht.Communication.Requests.Request">
-    <Position X="4" Y="3.5" Width="1.5" />
+    <Position X="5.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Communication\Requests\Request.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Com.Five.Dht.Communication.Requests.Insert">
-    <Position X="3" Y="5.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>Communication\Requests\Insert.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Com.Five.Dht.Communication.Requests.Lookup">
-    <Position X="0.75" Y="5.25" Width="1.5" />
+  <Class Name="Com.Five.Dht.Communication.Requests.Get">
+    <Position X="3" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Communication\Requests\Lookup.cs</FileName>
+      <FileName>Communication\Requests\Get.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Requests.Put">
+    <Position X="0.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Communication\Requests\Put.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Communication.Requests.Remove">
-    <Position X="5.25" Y="5.25" Width="1.5" />
+    <Position X="5.25" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Communication\Requests\Remove.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Communication.Requests.Shutdown" Collapsed="true">
-    <Position X="7.5" Y="5.25" Width="1.5" />
+    <Position X="7.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Communication\Requests\Shutdown.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Com.Five.Dht.Communication.Responses.InsertResponse" Collapsed="true">
-    <Position X="0.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Communication\Responses\InsertResponse.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Com.Five.Dht.Communication.Responses.InternalError" Collapsed="true">
-    <Position X="3" Y="1.75" Width="1.5" />
+    <Position X="1" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
       <FileName>Communication\Responses\InternalError.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Communication.Responses.InvalidRequest" Collapsed="true">
-    <Position X="7.5" Y="1.75" Width="1.5" />
+    <Position X="7.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
       <FileName>Communication\Responses\InvalidRequest.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Communication.Responses.Response" Collapsed="true">
-    <Position X="4" Y="0.5" Width="1.5" />
+    <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Communication\Responses\Response.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Communication.Responses.ShutdownResponse" Collapsed="true">
-    <Position X="5.25" Y="1.75" Width="1.5" />
+    <Position X="5.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
       <FileName>Communication\Responses\ShutdownResponse.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Com.Five.Dht.Communication.Responses.GetResponse" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Communication\Responses\GetResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Responses.PutResponse" Collapsed="true">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Communication\Responses\PutResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Responses.RemoveResponse" Collapsed="true">
+    <Position X="14.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Communication\Responses\RemoveResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Requests.Ping" Collapsed="true">
+    <Position X="9.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Requests\Ping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Communication.Responses.PingResponse" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Responses\PingResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Com.Five.Dht.Communication.IChannelClient" Collapsed="true">
-    <Position X="11.75" Y="0.5" Width="1.5" />
+    <Position X="18.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAICAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Communication\IChannelClient.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Communication.IChannel" Collapsed="true">
-    <Position X="10" Y="0.5" Width="1.5" />
+    <Position X="17" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAIABAAAAAAAAAAAAAAAAACAAABgAAAAA=</HashCode>
       <FileName>Communication\IChannel.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Communication.IRequestHandler" Collapsed="true">
-    <Position X="11.75" Y="1.25" Width="1.5" />
+    <Position X="17" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
       <FileName>Communication\IRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Communication.IChannelListener" Collapsed="true">
-    <Position X="10" Y="1.25" Width="1.5" />
+    <Position X="20.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
       <FileName>Communication\IChannelListener.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="Com.Five.Dht.Communication.IRequestResponseFormatter" Collapsed="true">
+    <Position X="18.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Communication\IRequestResponseFormatter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Enum Name="Com.Five.Dht.Communication.ConnectionState" Collapsed="true">
-    <Position X="10" Y="2.25" Width="1.5" />
+    <Position X="17" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAACAAAAQAAAAAAAA=</HashCode>
       <FileName>Communication\IChannelClient.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Com.Five.Dht.Communication.State" Collapsed="true">
-    <Position X="11.75" Y="2.25" Width="1.5" />
+    <Position X="18.75" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAAAAAAIAAAAAAAAAEAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <HashCode>ABAAAAAAAAAAIQACAAAAAAEAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Communication\IChannel.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Com.Five.Dht.Communication.Responses.Status" Collapsed="true">
-    <Position X="10" Y="3" Width="1.5" />
+    <Position X="20.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAABABAAAAAAA=</HashCode>
       <FileName>Communication\Responses\Response.cs</FileName>

@@ -1,30 +1,33 @@
 ﻿namespace Com.Five.Dht.ServiceImpl
 {
-    using Service;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Communication;
     using Data;
+    using Service;
+    using System;
+    using System.Threading.Tasks;
 
     public class NodeClient : INodeClient
     {
-        public IChannelClient Endpoint
+        public NodeClient(IChannelClient channelClient)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            ChannelClient = channelClient;
+        }
+
+        public IChannelClient ChannelClient
+        {
+            get;
+            private set;
         }
 
         public Id Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            private set;
+        }
+
+        public Task<object> Get(string key)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<INode> GetSuccessor(Id id)
@@ -32,17 +35,17 @@
             throw new NotImplementedException();
         }
 
-        public Task<bool> Insert(Id id, string key, object val)
+        public Task<bool> Ping()
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> Lookup(Id id, string key)
+        public Task<bool> Put(string key, object val)
         {
             throw new NotImplementedException();
         }
 
-        public Task Remove(Id id, string key)
+        public Task<bool> Remove(string key)
         {
             throw new NotImplementedException();
         }

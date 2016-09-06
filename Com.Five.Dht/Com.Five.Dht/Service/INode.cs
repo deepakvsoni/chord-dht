@@ -2,6 +2,7 @@
 {
     using Communication;
     using Data;
+    using System;
     using System.Collections.Generic;
 
     public interface INode
@@ -15,6 +16,10 @@
         INode Predecessor { get; set; }
 
         ICollection<INode> Successors { get; }
+
+        void JoinRing(Uri uri);
+
+        void CreateRing();
 
         void RequestShutdown();
     }

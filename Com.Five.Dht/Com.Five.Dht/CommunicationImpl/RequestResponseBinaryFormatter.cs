@@ -23,6 +23,17 @@
             return data;
         }
 
+        public object GetObject(byte[] bytes)
+        {
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+
+                object obj = _formatter.Deserialize(ms);
+                return obj;
+            }
+        }
+
         public object GetObject(int totalBytes
             , IList<ArraySegment<byte>> bytes)
         {

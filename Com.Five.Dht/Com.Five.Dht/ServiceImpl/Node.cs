@@ -7,14 +7,13 @@
     using Communication;
     using Data;
 
-    public class Node : INode, IChannelListener
+    public class Node : INode, IChannelListener, IDisposable
     {
         Id _id;
-        Uri _bootstrapUri;
         IChannel _channel;
         IRequestHandler _requestHandler;
                 
-        public Node(Id id, Uri bootstrapUri, IChannel channel
+        public Node(Id id, IChannel channel
             , IDataEntries entries, IRequestHandler requestHandler)
         {
             if(null == id)
@@ -37,7 +36,6 @@
             _channel = channel;
             Entries = entries;
             _requestHandler = requestHandler;
-            _bootstrapUri = bootstrapUri;
             _channel.RegisterChannelListener(this);
         }
 
@@ -95,5 +93,38 @@
         {
             _channel.RequestClose();
         }
+
+        public void JoinRing(Uri uri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateRing()
+        {
+            throw new NotImplementedException();
+        }
+
+        #region IDisposable Support
+
+        bool disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Channel.RequestClose();
+                }
+
+                disposedValue = true;
+            }
+        }
+        
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

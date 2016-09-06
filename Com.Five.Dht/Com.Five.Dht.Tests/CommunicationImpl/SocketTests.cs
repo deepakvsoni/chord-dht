@@ -10,8 +10,6 @@
     using NSubstitute;
     using Communication;
     using System.Collections.Generic;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using System.IO;
     using Communication.Responses;
     using System.Text;
 
@@ -20,35 +18,30 @@
     {
         Uri _serverUri = new Uri("sock://localhost:10000");
 
-        byte[] shutdownResponseBytes, insertResponseBytes;
+        byte[] _shutdownRequestBytes, _shutdownResponseBytes
+            , _putRequestBytes, _putResponseBytes;
+
+        IRequestResponseFormatter _formatter
+                = new RequestResponseBinaryFormatter();
 
         [SetUp]
         public void Setup()
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (MemoryStream ms = new MemoryStream())
+            _shutdownRequestBytes = _formatter.GetBytes(new Shutdown());
+            _shutdownResponseBytes = _formatter.GetBytes(new ShutdownResponse
             {
-                formatter.Serialize(ms, new ShutdownResponse
-                {
-                    Status = Status.Ok,
-                    ShutdownAccepted = true
-                });
-
-                ms.Seek(0, SeekOrigin.Begin);
-
-                shutdownResponseBytes = ms.GetBuffer();
-            }
-            using (MemoryStream ms = new MemoryStream())
+                Status = Status.Ok,
+                ShutdownAccepted = true
+            });
+            _putRequestBytes = _formatter.GetBytes(new Put
             {
-                formatter.Serialize(ms, new PutResponse
-                {
-                    Status = Status.Ok
-                });
-
-                ms.Seek(0, SeekOrigin.Begin);
-
-                insertResponseBytes = ms.GetBuffer();
-            }
+                Key = "ABCD",
+                Value = "ABCD"
+            });
+            _putResponseBytes = _formatter.GetBytes(new PutResponse
+            {
+                Status = Status.Ok
+            });
         }
 
         [Category("Integration")]
@@ -63,7 +56,7 @@
 
             listener.HandleRequest(Arg.Any<int>(),
                Arg.Any<IList<ArraySegment<byte>>>())
-               .Returns(shutdownResponseBytes)
+               .Returns(_shutdownResponseBytes)
                .AndDoes((p) =>
                {
                    channel.RequestClose();
@@ -81,10 +74,18 @@
 
             channel.State.Should().Be(State.Accepting);
 
+            IChannelClientListener clistener
+               = Substitute.For<IChannelClientListener>();
+
             SocketChannelClient client = new SocketChannelClient(_serverUri);
+
+            client.RegisterChannelClientListener(clistener);
+
             client.Connect().Should().BeTrue();
 
-            Response response = await client.SendRequest(new Shutdown());
+            byte[] responseBytes = await client.SendRequest(_shutdownRequestBytes);
+
+            Response response = (Response)_formatter.GetObject(responseBytes);
 
             response.Should().BeOfType<ShutdownResponse>();
             response.Status.Should().Be(Status.Ok);
@@ -107,7 +108,7 @@
 
             listener.HandleRequest(Arg.Any<int>(),
                Arg.Any<IList<ArraySegment<byte>>>())
-               .Returns(insertResponseBytes)
+               .Returns(_putResponseBytes)
                .AndDoes((p) =>
                {
                    channel.RequestClose();
@@ -125,7 +126,13 @@
 
             channel.State.Should().Be(State.Accepting);
 
+            IChannelClientListener clistener
+               = Substitute.For<IChannelClientListener>();
+
             SocketChannelClient client = new SocketChannelClient(_serverUri);
+
+            client.RegisterChannelClientListener(clistener);
+
             client.Connect().Should().BeTrue();
 
             Put insert = new Put
@@ -140,7 +147,11 @@
             }
             insert.Value = s.ToString();
 
-            Response response = await client.SendRequest(insert);
+            byte[] putRequest = _formatter.GetBytes(insert);
+
+            byte[] responseBytes = await client.SendRequest(putRequest);
+
+            Response response = (Response)_formatter.GetObject(responseBytes);
 
             response.Should().BeOfType<PutResponse>();
             response.Status.Should().Be(Status.Ok);

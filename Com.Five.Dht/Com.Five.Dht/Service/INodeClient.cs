@@ -2,24 +2,22 @@
 {
     using Communication;
     using Data;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public interface INodeClient
     {
         Id Id { get; }
 
-        IChannelClient Endpoint { get; }
+        IChannelClient ChannelClient { get; }
 
         Task<INode> GetSuccessor(Id id);
 
-        Task<bool> Insert(Id id, string key, object val);
+        Task<bool> Put(string key, object val);
 
-        Task<object> Lookup(Id id, string key);
+        Task<object> Get(string key);
 
-        Task Remove(Id id, string key);
+        Task<bool> Remove(string key);
+
+        Task<bool> Ping();
     }
 }

@@ -1,14 +1,11 @@
 ﻿namespace Com.Five.Dht.CommunicationImpl
 {
     using Communication;
-    using Communication.Requests;
-    using Communication.Responses;
     using log4net;
     using System;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -19,8 +16,9 @@
         ManualResetEventSlim _clientConnected = new ManualResetEventSlim(false),
             _responseReceived = new ManualResetEventSlim(false);
 
-        //TODO: Refactor message format type and handler.
-        BinaryFormatter _formatter = new BinaryFormatter();
+        IChannelClientListener _listener;
+
+        ConnectionState _state;
 
         Uri _serverUri;
 
@@ -28,19 +26,41 @@
 
         Socket _clientSocket;
 
-        Response _response;
+        public ConnectionState State
+        {
+            get
+            {
+                return _state;
+            }
+            private set
+            {
+                _state = value;
+                if(null != _listener)
+                {
+                    _listener.StateChange(value);
+                }
+            }
+        }
 
         public SocketChannelClient(Uri serverUri)
         {
+            if(null == serverUri)
+            {
+                throw new ArgumentNullException(nameof(serverUri));
+            }
             _serverUri = serverUri;
         }
 
-        public ConnectionState State
+        public void RegisterChannelClientListener(
+            IChannelClientListener listener)
         {
-            get;
-            private set;
+            if (null == listener)
+            {
+                throw new ArgumentNullException(nameof(listener));
+            }
+            _listener = listener;
         }
-
+        
         public bool Connect()
         {
             _l.InfoFormat("Attempting to connect to {0}."
@@ -89,42 +109,42 @@
             _clientConnected.Set();
         }
 
-        public Task<Response> SendRequest(Request message)
+        public Task<byte[]> SendRequest(byte[] message)
         {
             if(State != ConnectionState.Connected)
             {
                 throw new InvalidOperationException("Client not connected.");
             }
+            if(null == message)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+            if(0 == message.Length)
+            {
+                throw new ArgumentException("Invalid message length.");
+            }
+            
             _l.InfoFormat("Sending request: {0}", message);
 
-            return Task.Factory.StartNew<Response>(() =>
+            return Task.Factory.StartNew(() =>
             {
-                using (MemoryStream ms = new MemoryStream())
+                Token token = new Token();
+                token.Socket = _clientSocket;
+
+                SocketAsyncEventArgs sendEa = new SocketAsyncEventArgs();
+                sendEa.SetBuffer(message, 0, message.Length);
+                sendEa.UserToken = token;
+                sendEa.RemoteEndPoint = _serverEndpoint;
+                sendEa.Completed += SendReceiveCompleted;
+
+                if (!_clientSocket.SendAsync(sendEa))
                 {
-                    _formatter.Serialize(ms, message);
-
-                    ms.Seek(0, SeekOrigin.Begin);
-
-                    byte[] buffer = (byte[])ms.GetBuffer().Clone();
-
-                    Token token = new Token();
-                    token.Socket = _clientSocket;
-
-                    SocketAsyncEventArgs sendEa = new SocketAsyncEventArgs();
-                    sendEa.SetBuffer(buffer, 0, buffer.Length);
-                    sendEa.UserToken = token;
-                    sendEa.RemoteEndPoint = _serverEndpoint;
-                    sendEa.Completed += SendReceiveCompleted;
-
-                    if(!_clientSocket.SendAsync(sendEa))
-                    {
-                        StartReceive(sendEa);
-                    }
-
-                    _responseReceived.Wait();
-                    _responseReceived.Reset();
+                    StartReceive(sendEa);
                 }
-                return _response;
+
+                _responseReceived.Wait();
+                _responseReceived.Reset();
+                return token.Data;
             });
         }
 
@@ -151,7 +171,8 @@
                 {
                     ProcessResponse(sendEa);
                 }
-            } else
+            }
+            else
             {
                 ProcessError(sendEa);
             }
@@ -194,7 +215,7 @@
         void HandleResponse(Token token)
         {
             _l.Info("Response received. Closing socket.");
-
+            
             using(MemoryStream stream = new MemoryStream(token.TotalBytes))
             {
                 foreach(ArraySegment<byte> segment in token.BufferList)
@@ -204,7 +225,7 @@
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                _response = (Response)_formatter.Deserialize(stream);
+                token.Data = stream.GetBuffer();
             }
 
             token.Socket.Shutdown(SocketShutdown.Both);
@@ -235,20 +256,24 @@
         {
             if (!disposedValue)
             {
-                if(null != _clientSocket)
+                if (null != _clientSocket)
                 {
-                    try
+                    if (disposing)
                     {
-                        _clientSocket.Shutdown(SocketShutdown.Both);
+                        try
+                        {
+                            _clientSocket.Shutdown(SocketShutdown.Both);
+                        }
+                        catch (Exception e)
+                        {
+                            _l.Error(e);
+                        }
+                        _clientSocket.Close();
+                        _clientSocket.Dispose();
                     }
-                    catch(Exception e)
-                    {
-                        _l.Error(e);
-                    }
-                    _clientSocket.Close();
-                    _clientSocket.Dispose();
+                    _clientConnected.Dispose();
+                    _responseReceived.Dispose();
                 }
-
                 disposedValue = true;
             }
         }

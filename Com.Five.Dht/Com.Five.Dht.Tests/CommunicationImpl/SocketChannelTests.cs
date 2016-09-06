@@ -30,14 +30,6 @@
 
         [Category("Unit")]
         [Test]
-        public void SocketChannel_ConstructSchemeNotDefined()
-        {
-            Action a = () => new SocketChannel(new Uri("localhost:5000"));
-            a.ShouldThrow<ArgumentException>();
-        }
-
-        [Category("Unit")]
-        [Test]
         public void SocketChannel_ConstructInvalidScheme()
         {
             Action a = () => new SocketChannel(new Uri("http://localhost"));
@@ -50,6 +42,24 @@
         {
             Action a = () => new SocketChannel(new Uri("sock://localhost"));
             a.ShouldThrow<ArgumentException>();
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void SocketChannel_Dispose()
+        {
+            SocketChannel c = new SocketChannel(new Uri("sock://localhost:5000")); ;
+            Action a = () => c.Dispose();
+            a.ShouldNotThrow();
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void SocketChannel_RegisterNullListener()
+        {
+            SocketChannel c = new SocketChannel(new Uri("sock://localhost:5000"));
+            Action a = () => c.RegisterChannelListener(null);
+            a.ShouldThrow<ArgumentNullException>();
         }
 
         [Category("Unit")]

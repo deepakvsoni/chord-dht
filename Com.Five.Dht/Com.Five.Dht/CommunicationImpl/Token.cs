@@ -23,6 +23,12 @@
             set;
         }
 
+        public byte[] Data
+        {
+            get;
+            set;
+        }
+
         public Socket Socket
         {
             get;
