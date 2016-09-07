@@ -6,13 +6,19 @@
     using System.Threading.Tasks;
     using Communication;
     using Data;
+    using System.Threading;
+    using log4net;
 
     public class Node : INode, IChannelListener, IDisposable
     {
+        ILog _l = LogManager.GetLogger(typeof(Node));
+
         Id _id;
         IChannel _channel;
         IRequestHandler _requestHandler;
-                
+        AutoResetEvent _channelAccepting = new AutoResetEvent(false);
+        AutoResetEvent _channelClosed = new AutoResetEvent(false);
+
         public Node(Id id, IChannel channel
             , IDataEntries entries, IRequestHandler requestHandler)
         {
@@ -81,7 +87,14 @@
 
         public void StateChange(State newState)
         {
-            //TBD
+            if (newState == State.Accepting)
+            {
+                _channelAccepting.Set();
+            }
+            if(newState == State.NotOpen)
+            {
+                _channelClosed.Set();
+            }
         }
 
         public void HandleError(int errorCode)
@@ -92,16 +105,38 @@
         public void RequestShutdown()
         {
             _channel.RequestClose();
+
+            _channelClosed.WaitOne(10000);
         }
 
         public void JoinRing(Uri uri)
         {
-            throw new NotImplementedException();
+            Start();
         }
 
-        public void CreateRing()
+        public void Start()
         {
-            throw new NotImplementedException();
+            _l.InfoFormat("Starting node {0}.", _channel.Url);
+
+            _channel.Open();
+
+            if (!_channelAccepting.WaitOne(15000))
+            {
+                _l.DebugFormat("Wait for channel {0} to open timed out."
+                    , _channel.Url);
+            }
+            _l.DebugFormat("State of channel {0}: {1}", _channel.Url
+                , _channel.State);
+
+            if(_channel.State != State.Accepting)
+            {
+                _l.DebugFormat("Requesting close of channel {0} incase it opens later."
+                    , _channel.Url);
+                _channel.RequestClose();
+
+                throw new ApplicationException("Could not open channel.");
+            }
+            _l.InfoFormat("Node {0} started", _channel.Url);
         }
 
         #region IDisposable Support

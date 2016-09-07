@@ -107,16 +107,18 @@
 
             c.State.Should().Be(State.Accepting);
 
-            c = new SocketChannel(new Uri("sock://localhost:5000"));
-            c.RegisterChannelListener(listener);
-            c.Open();
+            SocketChannel c2 = new SocketChannel(new Uri("sock://localhost:5000"));
+            c2.RegisterChannelListener(listener);
+            c2.Open();
 
             e.WaitOne(10000);
 
             listener.Received(1).HandleError(
                 (int)SocketError.AddressAlreadyInUse);
 
-            c.State.Should().Be(State.Error);
+            c2.State.Should().Be(State.Error);
+
+            c2.RequestClose();
 
             c.RequestClose();
 

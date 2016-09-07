@@ -19,7 +19,7 @@
 
         void JoinRing(Uri uri);
 
-        void CreateRing();
+        void Start();
 
         void RequestShutdown();
     }
