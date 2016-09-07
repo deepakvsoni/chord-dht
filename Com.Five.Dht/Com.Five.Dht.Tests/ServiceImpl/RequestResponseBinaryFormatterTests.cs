@@ -1,11 +1,11 @@
-﻿namespace Com.Five.Dht.Tests.CommunicationImpl
+﻿namespace Com.Five.Dht.Tests.ServiceImpl
 {
-    using Dht.CommunicationImpl;
     using NUnit.Framework;
     using System;
     using FluentAssertions;
     using Communication.Requests;
     using System.Collections.Generic;
+    using Dht.ServiceImpl;
 
     [TestFixture]
     public class RequestResponseBinaryFormatterTests

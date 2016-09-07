@@ -4,6 +4,7 @@
     using CommunicationImpl;
     using Data;
     using DataImpl;
+    using Service;
     using System;
     using System.Text;
 

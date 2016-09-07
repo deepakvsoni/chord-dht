@@ -48,12 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommunicationImpl\RequestResponseBinaryFormatter.cs" />
+    <Compile Include="ServiceImpl\RequestResponseBinaryFormatter.cs" />
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPool.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClient.cs" />
     <Compile Include="CommunicationImpl\SocketChannel.cs" />
     <Compile Include="Communication\IChannelClientListener.cs" />
-    <Compile Include="Communication\IRequestResponseFormatter.cs" />
+    <Compile Include="Service\IRequestResponseFormatter.cs" />
     <Compile Include="Communication\Requests\Join.cs" />
     <Compile Include="Communication\Requests\Ping.cs" />
     <Compile Include="Communication\Responses\GetResponse.cs" />
@@ -61,12 +61,12 @@
     <Compile Include="Communication\Responses\PingResponse.cs" />
     <Compile Include="Communication\Responses\RemoveResponse.cs" />
     <Compile Include="ServiceImpl\NodeBuilder.cs" />
-    <Compile Include="CommunicationImpl\RequestHandler.cs" />
+    <Compile Include="ServiceImpl\RequestHandler.cs" />
     <Compile Include="CommunicationImpl\Token.cs" />
     <Compile Include="Communication\IChannelClient.cs" />
     <Compile Include="Communication\IChannel.cs" />
     <Compile Include="Communication\IChannelListener.cs" />
-    <Compile Include="Communication\IRequestHandler.cs" />
+    <Compile Include="Service\IRequestHandler.cs" />
     <Compile Include="Communication\Requests\Remove.cs" />
     <Compile Include="Communication\Requests\Request.cs" />
     <Compile Include="Communication\Requests\Put.cs" />

@@ -1,6 +1,5 @@
-﻿namespace Com.Five.Dht.CommunicationImpl
+﻿namespace Com.Five.Dht.ServiceImpl
 {
-    using Communication;
     using Communication.Requests;
     using Communication.Responses;
     using log4net;

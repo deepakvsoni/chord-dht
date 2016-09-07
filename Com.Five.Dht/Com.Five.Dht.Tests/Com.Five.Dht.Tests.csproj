@@ -96,8 +96,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CommunicationImpl\RequestHandlerTests.cs" />
-    <Compile Include="CommunicationImpl\RequestResponseBinaryFormatterTests.cs" />
+    <Compile Include="ServiceImpl\RequestHandlerTests.cs" />
+    <Compile Include="ServiceImpl\RequestResponseBinaryFormatterTests.cs" />
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPoolTests.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClientTests.cs" />
     <Compile Include="CommunicationImpl\SocketChannelTests.cs" />

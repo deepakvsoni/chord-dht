@@ -12,6 +12,8 @@
     using System.Collections.Generic;
     using Communication.Responses;
     using System.Text;
+    using Service;
+    using Dht.ServiceImpl;
 
     [TestFixture]
     public class SocketTests

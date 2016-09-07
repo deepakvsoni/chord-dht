@@ -1,6 +1,6 @@
-﻿namespace Com.Five.Dht.CommunicationImpl
+﻿namespace Com.Five.Dht.ServiceImpl
 {
-    using Communication;
+    using Service;
     using System;
     using System.Collections.Generic;
     using System.IO;

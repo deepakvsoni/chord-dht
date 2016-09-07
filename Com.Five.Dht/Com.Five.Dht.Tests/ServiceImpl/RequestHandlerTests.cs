@@ -1,10 +1,9 @@
-﻿namespace Com.Five.Dht.Tests.CommunicationImpl
+﻿namespace Com.Five.Dht.Tests.ServiceImpl
 {
-    using Communication;
     using Communication.Requests;
     using Communication.Responses;
-    using Dht.CommunicationImpl;
     using Dht.Data;
+    using Dht.ServiceImpl;
     using FluentAssertions;
     using NSubstitute;
     using NUnit.Framework;

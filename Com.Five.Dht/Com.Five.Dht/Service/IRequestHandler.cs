@@ -1,4 +1,4 @@
-﻿namespace Com.Five.Dht.Communication
+﻿namespace Com.Five.Dht.Service
 {
     using System;
     using System.Collections.Generic;
