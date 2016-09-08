@@ -2,6 +2,7 @@
 {
     using Communication.Requests;
     using Communication.Responses;
+    using Data;
     using log4net;
     using Service;
     using System;
@@ -40,6 +41,7 @@
             _handlers[typeof(Remove)] = HandleRemove;
             _handlers[typeof(Ping)] = HandlePing;
             _handlers[typeof(Join)] = HandleJoin;
+            _handlers[typeof(GetSuccessor)] = HandleGetSuccessor;
         }
 
         public async Task<byte[]> Handle(int totalBytes
@@ -136,6 +138,45 @@
             return Task.Factory.StartNew<Response>(() =>
             {
                 return new JoinResponse();
+            });
+        }
+
+        Task<Response> HandleGetSuccessor(Request request)
+        {
+            return Task.Factory.StartNew<Response>(() =>
+            {
+                GetSuccessor req = (GetSuccessor)request;
+
+                //This is the only node in the ring.
+                if (0 == Node.Successors.Count)
+                {
+                    return new GetSuccessorResponse
+                    {
+                        NodeInfo = Node.Info
+                    };
+                }
+                /*
+                 * Get the first node in the list whose Id is greater than
+                 * the requesting node and return its successor.
+                 */
+                foreach (Id nodeId in Node.Successors.Keys)
+                {
+                    if (nodeId  > req.Id)
+                    {
+                        return new GetSuccessorResponse
+                        {
+                            NodeInfo = Node.Successors[nodeId]
+                        };
+                    }
+                }
+                /*
+                 * No node found whose Id is greater the requesting node's Id.
+                 * Returning the first node to wrap around the ring.
+                 */ 
+                return new GetSuccessorResponse
+                {
+                    NodeInfo = Node.Successors[Node.Successors.Keys[0]]
+                };
             });
         }
     }

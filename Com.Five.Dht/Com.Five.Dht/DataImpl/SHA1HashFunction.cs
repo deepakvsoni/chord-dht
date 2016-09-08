@@ -8,6 +8,14 @@
     {
         SHA1 _sha1 = new SHA1CryptoServiceProvider();
 
+        public int Length
+        {
+            get
+            {
+                return _sha1.HashSize;
+            }
+        }
+
         public byte[] ComputeHash(byte[] data)
         {
             return _sha1.ComputeHash(data);

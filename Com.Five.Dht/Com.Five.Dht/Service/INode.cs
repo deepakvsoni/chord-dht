@@ -7,15 +7,20 @@
 
     public interface INode
     {
+        INodeInfo Info
+        {
+            get;
+        }
+
         Id Id { get; }
 
         IChannel Channel { get; }
 
         IDataEntries Entries { get; }
 
-        INode Predecessor { get; set; }
+        INodeInfo Predecessor { get; set; }
 
-        ICollection<INode> Successors { get; }
+        SortedList<Id, INodeInfo> Successors { get; }
 
         void JoinRing(Uri uri);
 

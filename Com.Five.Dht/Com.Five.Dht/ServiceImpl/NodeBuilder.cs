@@ -6,10 +6,11 @@
     using DataImpl;
     using Service;
     using System;
-    using System.Text;
 
     public class NodeBuilder
     {
+        int _maxNoOfBits;
+
         IDataEntries _dataEntries;
 
         IChannel _channel;
@@ -18,11 +19,25 @@
 
         IRequestResponseFormatter _requestResponseFormatter;
 
+        IHashFunction _hashFunction;
+
         Uri _uri;
+
+        public NodeBuilder SetMaxNoOfBits(int maxNoOfBits)
+        {
+            _maxNoOfBits = maxNoOfBits;
+            return this;
+        }
 
         public NodeBuilder SetUri(Uri uri)
         {
             _uri = uri;
+            return this;
+        }
+
+        public NodeBuilder SetHashFunction(IHashFunction hashFunction)
+        {
+            _hashFunction = hashFunction;
             return this;
         }
 
@@ -58,7 +73,14 @@
             {
                 throw new InvalidOperationException("Uri not set.");
             }
+            int maxNoOfBits = _maxNoOfBits <= 0 ?
+                64 : _maxNoOfBits;
 
+            IHashFunction hashFunction = _hashFunction 
+                ?? new SHA1HashFunction();
+
+            IdGenerator _idGenerator = new IdGenerator(maxNoOfBits,
+                hashFunction);
             IDataEntries dataEntries = _dataEntries ?? new DataEntries();
             IChannel channel = _channel ?? new SocketChannel(_uri);
             IRequestResponseFormatter formatter = _requestResponseFormatter ??
@@ -66,8 +88,8 @@
             IRequestHandler requestHandler = _requestHandler ??
                 new RequestHandler(formatter);
 
-            Id id = new Id(Encoding.UTF8.GetBytes(_uri.AbsolutePath + ":"
-                + _uri.Port));
+            Id id = _idGenerator.Generate(_uri.AbsolutePath + ":"
+                + _uri.Port);
 
             Node node = new Node(id, channel, dataEntries
                 , requestHandler);

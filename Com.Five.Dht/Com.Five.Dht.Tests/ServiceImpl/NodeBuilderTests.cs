@@ -118,6 +118,8 @@
                 b.SetUri(new Uri("sock://localhost:5000"))
                     .SetChannel(new SocketChannel(
                         new Uri("sock://localhost:5000")))
+                    .SetMaxNoOfBits(32)
+                    .SetHashFunction(new SHA1HashFunction())
                     .SetDataEntries(new DataEntries())
                     .SetRequestHandler(new RequestHandler(
                         new RequestResponseBinaryFormatter()));

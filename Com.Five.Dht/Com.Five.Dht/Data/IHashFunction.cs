@@ -2,6 +2,11 @@
 {
     public interface IHashFunction
     {
+        int Length
+        {
+            get;
+        }
+
         byte[] ComputeHash(byte[] data);
     }
 }

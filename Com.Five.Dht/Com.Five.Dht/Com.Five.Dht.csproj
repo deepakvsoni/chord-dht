@@ -48,11 +48,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Requests\GetSuccessor.cs" />
+    <Compile Include="Communication\Responses\GetSuccessorResponse.cs" />
+    <Compile Include="Data\IdGenerator.cs" />
+    <Compile Include="ServiceImpl\NodeInfo.cs" />
     <Compile Include="ServiceImpl\RequestResponseBinaryFormatter.cs" />
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPool.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClient.cs" />
     <Compile Include="CommunicationImpl\SocketChannel.cs" />
     <Compile Include="Communication\IChannelClientListener.cs" />
+    <Compile Include="Service\FingerTable.cs" />
+    <Compile Include="Service\INodeInfo.cs" />
     <Compile Include="Service\IRequestResponseFormatter.cs" />
     <Compile Include="Communication\Requests\Join.cs" />
     <Compile Include="Communication\Requests\Ping.cs" />

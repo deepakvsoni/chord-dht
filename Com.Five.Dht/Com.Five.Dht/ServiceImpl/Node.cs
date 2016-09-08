@@ -38,19 +38,14 @@
             {
                 throw new ArgumentNullException(nameof(requestHandler));
             }
+
             _id = id;
             _channel = channel;
             Entries = entries;
             _requestHandler = requestHandler;
             _channel.RegisterChannelListener(this);
-        }
 
-        public IChannel Channel
-        {
-            get
-            {
-                return _channel;
-            }
+            Info = new NodeInfo { Id = id, Uri = channel.Url };
         }
 
         public Id Id
@@ -61,19 +56,34 @@
             }
         }
 
+        public INodeInfo Info
+        {
+            get;
+            private set;
+        }
+
+        public IChannel Channel
+        {
+            get
+            {
+                return _channel;
+            }
+        }
+
+
         public IDataEntries Entries
         {
             get;
             private set;
         }
 
-        public INode Predecessor
+        public INodeInfo Predecessor
         {
             get;
             set;
         }
 
-        public ICollection<INode> Successors
+        public SortedList<Id, INodeInfo> Successors
         {
             get;
             private set;
