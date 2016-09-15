@@ -3,6 +3,7 @@
     using Communication.Requests;
     using Communication.Responses;
     using Dht.Data;
+    using Dht.Service;
     using Dht.ServiceImpl;
     using FluentAssertions;
     using NSubstitute;

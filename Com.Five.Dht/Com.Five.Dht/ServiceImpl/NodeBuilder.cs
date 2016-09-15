@@ -9,7 +9,7 @@
 
     public class NodeBuilder
     {
-        int _maxNoOfBits;
+        byte _maxNoOfBits;
 
         IDataEntries _dataEntries;
 
@@ -23,7 +23,7 @@
 
         Uri _uri;
 
-        public NodeBuilder SetMaxNoOfBits(int maxNoOfBits)
+        public NodeBuilder SetMaxNoOfBits(byte maxNoOfBits)
         {
             _maxNoOfBits = maxNoOfBits;
             return this;
@@ -73,8 +73,8 @@
             {
                 throw new InvalidOperationException("Uri not set.");
             }
-            int maxNoOfBits = _maxNoOfBits <= 0 ?
-                64 : _maxNoOfBits;
+            byte maxNoOfBits = _maxNoOfBits <= 0 ?
+               (byte)64 : _maxNoOfBits;
 
             IHashFunction hashFunction = _hashFunction 
                 ?? new SHA1HashFunction();

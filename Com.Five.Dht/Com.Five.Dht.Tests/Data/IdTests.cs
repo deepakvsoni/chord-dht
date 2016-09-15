@@ -4,6 +4,8 @@
     using FluentAssertions;
     using NUnit.Framework;
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     [TestFixture]
     public class IdTests
@@ -270,7 +272,7 @@
             ((Id)null == (Id)null).Should().BeTrue();
 #pragma warning restore RECS0088 // Comparing equal expression for equality is usually useless
         }
-        
+
         [Category("Unit")]
         [Test]
         public void Id_EqOp_Commutative()
@@ -362,6 +364,75 @@
 #pragma warning disable RECS0088 // Comparing equal expression for equality is usually useless
             ((Id)null != (Id)null).Should().BeFalse();
 #pragma warning restore RECS0088 // Comparing equal expression for equality is usually useless
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_GetPowers_ZeroMaxNoOfBits()
+        {
+            Action a = () => Id.GetPowersOfTwo(0);
+            a.ShouldThrow<ArgumentException>();
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_GetPowers_MaxBitsTwo()
+        {
+            IEnumerable<byte[]> powers = Id.GetPowersOfTwo(2);
+            powers.Should().HaveCount(2);
+
+            powers.ElementAt(0).Length.Should().Be(1);
+            powers.ElementAt(1).Length.Should().Be(1);
+
+            powers.ElementAt(0).Should().Equal(new byte[] { 1 });
+            powers.ElementAt(1).Should().Equal(new byte[] { 2 });
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_GetPowers_MaxBitsTwenty()
+        {
+            IEnumerable<byte[]> powers = Id.GetPowersOfTwo(20);
+            powers.Should().HaveCount(20);
+
+            foreach(byte[] power in powers)
+            {
+                power.Length.Should().Be(3);
+            }
+
+            powers.ElementAt(0).Should().Equal(new byte[] { 1, 0, 0 });
+            powers.ElementAt(1).Should().Equal(new byte[] { 2, 0, 0 });
+            powers.ElementAt(2).Should().Equal(new byte[] { 4, 0, 0, });
+            powers.ElementAt(3).Should().Equal(new byte[] { 8, 0, 0, });
+            powers.ElementAt(4).Should().Equal(new byte[] { 16, 0, 0, });
+            powers.ElementAt(5).Should().Equal(new byte[] { 32, 0, 0, });
+            powers.ElementAt(6).Should().Equal(new byte[] { 64, 0, 0, });
+            powers.ElementAt(7).Should().Equal(new byte[] { 128, 0, 0 });
+            powers.ElementAt(8).Should().Equal(new byte[] { 0, 1, 0 });
+            powers.ElementAt(9).Should().Equal(new byte[] { 0, 2, 0 });
+            powers.ElementAt(10).Should().Equal(new byte[] { 0, 4, 0 });
+            powers.ElementAt(11).Should().Equal(new byte[] { 0, 8, 0 });
+            powers.ElementAt(12).Should().Equal(new byte[] { 0, 16, 0 });
+            powers.ElementAt(13).Should().Equal(new byte[] { 0, 32, 0 });
+            powers.ElementAt(14).Should().Equal(new byte[] { 0, 64, 0 });
+            powers.ElementAt(15).Should().Equal(new byte[] { 0, 128, 0 });
+            powers.ElementAt(16).Should().Equal(new byte[] { 0, 0, 1 });
+            powers.ElementAt(17).Should().Equal(new byte[] { 0, 0, 2 });
+            powers.ElementAt(18).Should().Equal(new byte[] { 0, 0, 4 });
+            powers.ElementAt(19).Should().Equal(new byte[] { 0, 0, 8 });
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_GetPowers_MaxBits160()
+        {
+            IEnumerable<byte[]> powers = Id.GetPowersOfTwo(160);
+            powers.Should().HaveCount(160);
+
+            foreach (byte[] power in powers)
+            {
+                power.Length.Should().Be(20);
+            }
         }
     }
 }

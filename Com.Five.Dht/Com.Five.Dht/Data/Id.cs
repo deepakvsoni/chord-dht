@@ -1,10 +1,46 @@
 ﻿namespace Com.Five.Dht.Data
 {
     using System;
+    using System.Collections.Generic;
 
     [Serializable]
     public sealed class Id : IEquatable<Id>, IComparable<Id>
     {
+        public static IEnumerable<byte[]> GetPowersOfTwo(byte maxNoOfBits)
+        {
+            if(0 == maxNoOfBits)
+            {
+                throw new ArgumentException(
+                    "Invalid maxNoOfBits, should be greater than zero.");
+            }
+            IList<byte[]> powers = new List<byte[]>();
+
+            int noOfBytes = (int)Math.Ceiling(maxNoOfBits / 8.0);
+            int currentByte = 0;
+            byte currentBit = 0;
+
+            for (int i = 0; i < maxNoOfBits; ++i)
+            {
+                byte[] power = new byte[noOfBytes];
+                for (int j = 0; j < noOfBytes; ++j)
+                {
+                    power[j] = 0;
+                }
+                power[currentByte] = (byte)(1 << currentBit);
+                powers.Add(power);
+
+                currentBit++;
+
+                if (i != 0 && currentBit % 8 == 0)
+                {
+                    currentByte++;
+                    currentBit = 0;
+                }
+            }
+
+            return powers;
+        }
+
         readonly byte[] _id;
 
         public Id(byte[] id)

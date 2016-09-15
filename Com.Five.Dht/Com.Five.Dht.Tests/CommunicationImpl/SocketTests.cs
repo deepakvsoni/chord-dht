@@ -14,6 +14,7 @@
     using System.Text;
     using Service;
     using Dht.ServiceImpl;
+    using Dht.Service;
 
     [TestFixture]
     public class SocketTests

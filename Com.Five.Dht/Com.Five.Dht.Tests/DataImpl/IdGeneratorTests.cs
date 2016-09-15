@@ -43,15 +43,6 @@
 
         [Category("Unit")]
         [Test]
-        public void IdGenerator_ConstructNegativeMaxNoOfBits()
-        {
-            Action a = () => new IdGenerator(-32,
-                _sHashFunction);
-            a.ShouldThrow<ArgumentException>();
-        }
-
-        [Category("Unit")]
-        [Test]
         public void IdGenerator_ConstructNullHashFunction()
         {
             Action a = () => new IdGenerator(32,

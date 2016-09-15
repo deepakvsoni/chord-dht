@@ -8,7 +8,7 @@
     using Dht.ServiceImpl;
     using Dht.Data;
     using Communication;
-    using Service;
+    using Dht.Service;
 
     [TestFixture]
     public class NodeTests
