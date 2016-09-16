@@ -13,7 +13,7 @@
     [TestFixture]
     public class NodeTests
     {
-        Id _id = new Id(Encoding.UTF8.GetBytes("sock://localhost:5000"));
+        Id _id = new Id(Encoding.UTF8.GetBytes("sock://localhost:5000"), 160);
         IChannel _sChannel;
         IDataEntries _sDataEntries;
         IRequestHandler _sRequestHandler;
@@ -125,6 +125,29 @@
             a.ShouldNotThrow();
 
             node.RequestShutdown();
+        }
+
+        [Category("Integration")]
+        [Test]
+        public void Node_JoinRing_SocketChannel()
+        {
+            NodeBuilder builder = new NodeBuilder();
+            builder.SetUri(new Uri("sock://localhost:5000"));
+
+            Node node = builder.Build();
+            node.Start();
+
+            node.Channel.State.Should().Be(State.Accepting);
+
+            builder.SetUri(new Uri("sock://localhost:5001"));
+
+            Node clientNode = builder.Build();
+            clientNode.JoinRing(node.Channel.Url);
+
+            clientNode.Successors.Count.Should().Be(1);
+
+            node.RequestShutdown();
+            clientNode.RequestShutdown();
         }
     }
 }

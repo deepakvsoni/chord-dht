@@ -43,9 +43,13 @@
             _channel = channel;
             Entries = entries;
             _requestHandler = requestHandler;
+
             _channel.RegisterChannelListener(this);
 
             Info = new NodeInfo { Id = id, Uri = channel.Url };
+
+            FingerTable = new FingerTable(Id.MaxNoOfBits);
+            Successors = new SortedList<Id, INodeInfo>(2);
         }
 
         public Id Id
@@ -81,6 +85,12 @@
         {
             get;
             set;
+        }
+
+        public FingerTable FingerTable
+        {
+            get;
+            private set;
         }
 
         public SortedList<Id, INodeInfo> Successors
@@ -122,6 +132,42 @@
         public void JoinRing(Uri uri)
         {
             Start();
+
+            DoJoinRing(uri);
+        }
+
+        void DoJoinRing(Uri uri)
+        {
+            _l.InfoFormat("Joining ring {0}", uri);
+
+            NodeClientBuilder builder = new NodeClientBuilder();
+            builder.SetServerUri(uri);
+
+            INodeClient client = builder.Build();
+
+            _l.DebugFormat("Getting my successor from {0}", uri);
+
+            Task<INodeInfo> successorNodeTask = client.GetSuccessor(Id
+                , Channel.Url);
+            try
+            {
+                INodeInfo successorNode = successorNodeTask.Result;
+                if(null == successorNode)
+                {
+                    _l.Debug("Null successor node, shutting down.");
+                    RequestShutdown();
+                    return;
+                }
+                _l.DebugFormat("My successor {0}", successorNode.Uri);
+
+                Successors.Add(successorNode.Id, successorNode);
+            }
+            catch (Exception e)
+            {
+                _l.Error("Error getting joining ring, shutting down.", e);
+                RequestShutdown();
+            }
+
         }
 
         public void Start()
@@ -140,7 +186,8 @@
 
             if(_channel.State != State.Accepting)
             {
-                _l.DebugFormat("Requesting close of channel {0} incase it opens later."
+                _l.DebugFormat(
+                    "Requesting close of channel {0} incase it opens later."
                     , _channel.Url);
                 _channel.RequestClose();
 

@@ -59,7 +59,7 @@
             }
         }
 
-        public int MaxNoOfBits
+        public byte MaxNoOfBits
         {
             get;
             private set;
@@ -82,7 +82,7 @@
 
         Id GenerateIdNoTruncation(byte[] bytes)
         {
-            return new Id(bytes);
+            return new Id(bytes, MaxNoOfBits);
         }
 
         Id GenerateIdWithTruncation(byte[] bytes)
@@ -98,7 +98,7 @@
                     & _alignmentMask);
             }
 
-            return new Id(idBytes);
+            return new Id(idBytes, MaxNoOfBits);
         }
     }
 }

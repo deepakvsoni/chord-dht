@@ -2,6 +2,7 @@
 {
     using Communication;
     using Data;
+    using System;
     using System.Threading.Tasks;
 
     public interface INodeClient
@@ -9,8 +10,8 @@
         Id Id { get; }
 
         IChannelClient ChannelClient { get; }
-
-        Task<INode> GetSuccessor(Id id);
+        
+        Task<INodeInfo> GetSuccessor(Id id, Uri url);
 
         Task<bool> Put(string key, object val);
 

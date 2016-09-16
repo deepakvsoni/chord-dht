@@ -93,6 +93,7 @@
 
             Node node = new Node(id, channel, dataEntries
                 , requestHandler);
+            requestHandler.Node = node;
             return node;
         }
     }

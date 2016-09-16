@@ -11,5 +11,11 @@
             get;
             set;
         }
+
+        public Uri Url
+        {
+            get;
+            set;
+        }
     }
 }

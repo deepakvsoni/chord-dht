@@ -6,6 +6,8 @@
 
     public interface IRequestHandler
     {
+        INode Node { get; set; }
+
         Task<byte[]> Handle(int totalBytes
             , IList<ArraySegment<byte>> req);
     }

@@ -90,6 +90,7 @@
 
         Task<Response> HandleShutdown(Request request)
         {
+            _l.Debug("Received a request to SHUTDOWN.");
             return Task.Factory.StartNew<Response>(() =>
             {
                 Node.RequestShutdown();
@@ -99,8 +100,12 @@
 
         async Task<Response> HandlePut(Request request)
         {
+            
             //TODO: This should find the actual node.
             Put put = (Put)request;
+
+            _l.DebugFormat("Received request to PUT at key {0}.", put.Key);
+
             bool putSuccess = await Node.Entries.Put(put.Key, put.Value);
 
             if(putSuccess)
@@ -113,6 +118,9 @@
         async Task<Response> HandleGet(Request request)
         {
             Get get = (Get)request;
+
+            _l.DebugFormat("Received a GET request for key {0}.", get.Key);
+
             object val = await Node.Entries.Get(get.Key);
             return new GetResponse { Status = Status.Ok, Value = val };
         }
@@ -120,6 +128,10 @@
         async Task<Response> HandleRemove(Request request)
         {
             Remove remove = (Remove)request;
+
+            _l.DebugFormat("Received a REMOVE request for key {0}.",
+                remove.Key);
+
             bool removed = await Node.Entries.Remove(remove.Key);
             return removed ? RemoveResponse.Success 
                 : RemoveResponse.Failed;
@@ -127,6 +139,7 @@
 
         Task<Response> HandlePing(Request request)
         {
+            _l.Debug("Received a PING request.");
             return Task.Factory.StartNew<Response>(() =>
             {
                 return PingResponse.Alive;
@@ -145,11 +158,21 @@
         {
             return Task.Factory.StartNew<Response>(() =>
             {
-                GetSuccessor req = (GetSuccessor)request;
+                GetSuccessor getSuccessor = (GetSuccessor)request;
+
+                _l.DebugFormat("Received a GET SUCCESSOR request from {0}."
+                    , getSuccessor.Url);
+
 
                 //This is the only node in the ring.
                 if (0 == Node.Successors.Count)
                 {
+                    Node.Successors.Add(getSuccessor.Id, new NodeInfo
+                    {
+                        Id = getSuccessor.Id,
+                        Uri = getSuccessor.Url
+                    });
+
                     return new GetSuccessorResponse
                     {
                         NodeInfo = Node.Info
@@ -161,7 +184,7 @@
                  */
                 foreach (Id nodeId in Node.Successors.Keys)
                 {
-                    if (nodeId  > req.Id)
+                    if (nodeId  > getSuccessor.Id)
                     {
                         return new GetSuccessorResponse
                         {

@@ -20,6 +20,8 @@
 
         INodeInfo Predecessor { get; set; }
 
+        FingerTable FingerTable { get; }
+
         SortedList<Id, INodeInfo> Successors { get; }
 
         void JoinRing(Uri uri);

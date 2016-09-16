@@ -43,14 +43,25 @@
 
         readonly byte[] _id;
 
-        public Id(byte[] id)
+        public byte MaxNoOfBits
+        {
+            get;
+            private set;
+        }
+
+        public Id(byte[] id, byte length)
         {
             _id = id;
+            MaxNoOfBits = length;
         }
 
         public int CompareTo(Id other)
         {
-            if(_id.Length != other._id.Length)
+            if (MaxNoOfBits != other.MaxNoOfBits)
+            {
+                throw new InvalidOperationException("Comparing Ids of different size.");
+            }
+            if (_id.Length != other._id.Length)
             {
                 throw new InvalidOperationException("Comparing Ids of different size.");
             }

@@ -2,6 +2,7 @@
 {
     using Communication;
     using CommunicationImpl;
+    using Service;
     using System;
 
     public class NodeClientBuilder
@@ -23,7 +24,7 @@
 
         public NodeClient Build()
         {
-            if(null == _channelClient && null == _serverUri)
+            if(null == _serverUri)
             {
                 throw new InvalidOperationException(
                     "Channel Client or Server Uri required.");
@@ -31,7 +32,11 @@
             IChannelClient channelClient = _channelClient ??
                 new SocketChannelClient(_serverUri);
 
-            NodeClient client = new NodeClient(channelClient);
+            //TODO: Use in builder.
+            IRequestResponseFormatter formatter
+                = new RequestResponseBinaryFormatter();
+
+            NodeClient client = new NodeClient(channelClient, formatter);
 
             return client;
         }

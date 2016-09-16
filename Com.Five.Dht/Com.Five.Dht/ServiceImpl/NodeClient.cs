@@ -1,6 +1,7 @@
 ﻿namespace Com.Five.Dht.ServiceImpl
 {
     using Communication;
+    using Communication.Responses;
     using Data;
     using Service;
     using System;
@@ -8,12 +9,22 @@
 
     public class NodeClient : INodeClient
     {
-        public NodeClient(IChannelClient channelClient)
+        //TODO: IChannelClient should be a factory.
+
+        public NodeClient(IChannelClient channelClient,
+            IRequestResponseFormatter formatter)
         {
             ChannelClient = channelClient;
+            Formatter = formatter;
         }
 
         public IChannelClient ChannelClient
+        {
+            get;
+            private set;
+        }
+
+        public IRequestResponseFormatter Formatter
         {
             get;
             private set;
@@ -30,9 +41,31 @@
             throw new NotImplementedException();
         }
 
-        public Task<INode> GetSuccessor(Id id)
+        public async Task<INodeInfo> GetSuccessor(Id id, Uri url)
         {
-            throw new NotImplementedException();
+            if (ChannelClient.Connect())
+            {
+                Communication.Requests.GetSuccessor getSuccessor
+                    = new Communication.Requests.GetSuccessor
+                    {
+                        Id = id,
+                        Url = url
+                    };
+
+                byte[] request = Formatter.GetBytes(getSuccessor);
+                byte[] responseBytes 
+                    = await ChannelClient.SendRequest(request);
+
+                GetSuccessorResponse response 
+                    = (GetSuccessorResponse)Formatter.GetObject(responseBytes);
+
+                if(response.Status == Status.Ok)
+                {
+                    return response.NodeInfo;
+                }
+                return null;
+            }
+            return null;
         }
 
         public Task<bool> Ping()

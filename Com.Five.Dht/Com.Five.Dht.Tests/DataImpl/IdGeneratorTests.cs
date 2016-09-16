@@ -2,10 +2,6 @@
 {
     using NUnit.Framework;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using FluentAssertions;
     using Dht.Data;
     using NSubstitute;
@@ -91,7 +87,7 @@
             
             Id id = generator.Generate("sock://localhost:5000");
 
-            id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92 }));
+            id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92 }, 32));
         }
 
         [Category("Unit")]
@@ -103,7 +99,7 @@
 
             Id id = generator.Generate("sock://localhost:5000");
 
-            id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92, 2 }));
+            id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92, 2 }, 36));
         }
 
         [Category("Unit")]
@@ -117,7 +113,7 @@
 
             id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92, 130, 9
                 , 38, 65, 103, 130, 22, 213, 135, 39, 46, 231, 51, 104, 41
-                , 10 }));
+                , 10 }, 160));
         }
 
         [Category("Unit")]
@@ -130,7 +126,7 @@
             Id id = generator.Generate("sock://localhost:5000");
 
             id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92, 130, 9
-                , 38, 65, 103, 130, 22, 213, 135, 39, 46, 231, 3 }));
+                , 38, 65, 103, 130, 22, 213, 135, 39, 46, 231, 3 }, 132));
         }
 
         [Category("Unit")]
@@ -142,7 +138,7 @@
 
             Id id = generator.Generate("sock://localhost:5000");
 
-            id.Should().Equals(new Id(new byte[] { 1 }));
+            id.Should().Equals(new Id(new byte[] { 1 }, 1));
         }
 
         [Category("Unit")]
@@ -156,7 +152,7 @@
 
             id.Should().Equals(new Id(new byte[] { 15, 180, 234, 92, 130, 9
                 , 38, 65, 103, 130, 22, 213, 135, 39, 46, 231, 51, 104, 41
-                , 10 }));
+                , 10 }, 159));
         }
     }
 }
