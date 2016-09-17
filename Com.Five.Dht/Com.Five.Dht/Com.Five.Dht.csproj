@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ByteHelpers.cs" />
     <Compile Include="Communication\Requests\GetSuccessor.cs" />
     <Compile Include="Communication\Responses\GetSuccessorResponse.cs" />
     <Compile Include="Data\IdGenerator.cs" />
@@ -60,10 +61,8 @@
     <Compile Include="Service\FingerTable.cs" />
     <Compile Include="Service\INodeInfo.cs" />
     <Compile Include="Service\IRequestResponseFormatter.cs" />
-    <Compile Include="Communication\Requests\Join.cs" />
     <Compile Include="Communication\Requests\Ping.cs" />
     <Compile Include="Communication\Responses\GetResponse.cs" />
-    <Compile Include="Communication\Responses\JoinResponse.cs" />
     <Compile Include="Communication\Responses\PingResponse.cs" />
     <Compile Include="Communication\Responses\RemoveResponse.cs" />
     <Compile Include="ServiceImpl\NodeBuilder.cs" />
@@ -95,6 +94,11 @@
     <Compile Include="ServiceImpl\NodeClientBuilder.cs" />
     <Compile Include="Service\INode.cs" />
     <Compile Include="Service\INodeClient.cs" />
+    <Compile Include="Service\RingContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>RingContext.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config">
@@ -102,6 +106,10 @@
     </Content>
     <None Include="Communication\Communication.cd" />
     <None Include="packages.config" />
+    <None Include="Service\RingContext.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>RingContext.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

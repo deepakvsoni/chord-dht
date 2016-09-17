@@ -124,7 +124,7 @@
                 throw new ArgumentException("Invalid message length.");
             }
             
-            _l.InfoFormat("Sending request: {0}", message);
+            _l.InfoFormat("Sending request of length: {0}", message.Length);
 
             return Task.Factory.StartNew(() =>
             {
@@ -163,8 +163,8 @@
 
         void StartReceive(SocketAsyncEventArgs sendEa)
         {
-            _l.Info("Sending request completed.");
-            _l.Info("Received response from server.");
+            _l.Info("Send request completed.");
+            _l.Info("Receiving response from server.");
             if (sendEa.SocketError == SocketError.Success)
             {
                 if (!_clientSocket.ReceiveAsync(sendEa))

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Common;
 
     [Serializable]
     public sealed class Id : IEquatable<Id>, IComparable<Id>
@@ -49,6 +50,14 @@
             private set;
         }
 
+        public byte[] Bytes
+        {
+            get
+            {
+                return _id;
+            }
+        }
+
         public Id(byte[] id, byte length)
         {
             _id = id;
@@ -61,22 +70,8 @@
             {
                 throw new InvalidOperationException("Comparing Ids of different size.");
             }
-            if (_id.Length != other._id.Length)
-            {
-                throw new InvalidOperationException("Comparing Ids of different size.");
-            }
-            for(int i = 0; i < _id.Length; ++i)
-            {
-                if(_id[i] < other._id[i])
-                {
-                    return -1;
-                }
-                if (_id[i] > other._id[i])
-                {
-                    return 1;
-                }
-            }
-            return 0;
+            
+            return _id.CompareTo(other._id);
         }
 
         public bool Equals(Id other)
@@ -109,9 +104,19 @@
             return id1.CompareTo(id2) == -1;
         }
 
+        public static bool operator <=(Id id1, Id id2)
+        {
+            return id1.CompareTo(id2) <= 0;
+        }
+
         public static bool operator >(Id id1, Id id2)
         {
             return id1.CompareTo(id2) == 1;
+        }
+
+        public static bool operator >=(Id id1, Id id2)
+        {
+            return id1.CompareTo(id2) >= 0;
         }
 
         public static bool operator ==(Id id1, Id id2)

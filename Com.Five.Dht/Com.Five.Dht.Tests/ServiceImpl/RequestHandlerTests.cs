@@ -26,7 +26,7 @@
 
         ArraySegment<byte> _shutdownRequestBytes, _putRequestBytes, _getRequestBytes
             , _removeRequestBytes, _invalidRequestBytes, _pingRequestBytes
-            , _joinRequestBytes, _unknownRequestBytes;
+            , _unknownRequestBytes;
 
         byte[] _internalErrorResponseBytes;
 
@@ -51,8 +51,6 @@
                 _formatter.GetBytes(new Remove { Key = "123" }));
             _pingRequestBytes = new ArraySegment<byte>(
                 _formatter.GetBytes(Ping.I));
-            _joinRequestBytes = new ArraySegment<byte>(
-                _formatter.GetBytes(new Join()));
 
             _unknownRequestBytes = new ArraySegment<byte>(
                 _formatter.GetBytes(new UnknownRequest()));
@@ -355,26 +353,6 @@
 
             response.Should().NotBeNull();
             response.Should().BeAssignableTo<PingResponse>();
-        }
-
-        [Category("Unit")]
-        [Test]
-        public async Task RequestHandler_Join()
-        {
-            INode node = Substitute.For<INode>();
-
-            RequestHandler reqHandler = new RequestHandler(_formatter);
-            reqHandler.Node = node;
-
-            byte[] responseBytes = await reqHandler.Handle(
-                _joinRequestBytes.Array.Length
-                , GetArray(_joinRequestBytes));
-
-            object response = _formatter.GetObject(responseBytes.Length
-                , GetArray(new ArraySegment<byte>(responseBytes)));
-
-            response.Should().NotBeNull();
-            response.Should().BeAssignableTo<JoinResponse>();
         }
     }
 }

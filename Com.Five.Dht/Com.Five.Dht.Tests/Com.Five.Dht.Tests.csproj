@@ -96,6 +96,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Common\ByteHelpersTests.cs" />
     <Compile Include="DataImpl\IdGeneratorTests.cs" />
     <Compile Include="ServiceImpl\NodeTests.cs" />
     <Compile Include="ServiceImpl\RequestHandlerTests.cs" />

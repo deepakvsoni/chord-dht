@@ -74,8 +74,9 @@
                 throw new InvalidOperationException("Uri not set.");
             }
             byte maxNoOfBits = _maxNoOfBits <= 0 ?
-               (byte)64 : _maxNoOfBits;
+               RingContext.Default.MaxNoOfBits : _maxNoOfBits;
 
+            //TODO: All this should use a container?
             IHashFunction hashFunction = _hashFunction 
                 ?? new SHA1HashFunction();
 

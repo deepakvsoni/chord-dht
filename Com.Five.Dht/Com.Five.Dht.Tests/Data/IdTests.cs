@@ -357,6 +357,36 @@
 
         [Category("Unit")]
         [Test]
+        public void Id_GtEqOp()
+        {
+            Id id1 = new Id(new byte[] { 211, 122, 245, 12, 66, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+            Id id2 = new Id(new byte[] { 211, 122, 245, 12, 65, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+
+            (id1 >= id2).Should().BeTrue();
+            (id2 <= id1).Should().BeTrue();
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_GtEqOp_Eq()
+        {
+            Id id1 = new Id(new byte[] { 211, 122, 245, 12, 66, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+            Id id2 = new Id(new byte[] { 211, 122, 245, 12, 66, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+
+            (id1 >= id2).Should().BeTrue();
+            (id2 <= id1).Should().BeTrue();
+        }
+
+        [Category("Unit")]
+        [Test]
         public void Id_LtOp()
         {
             Id id1 = new Id(new byte[] { 211, 122, 245, 12, 63, 160, 111, 239
@@ -368,6 +398,36 @@
 
             (id1 < id2).Should().BeTrue();
             (id2 > id1).Should().BeTrue();
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_LtEqOp()
+        {
+            Id id1 = new Id(new byte[] { 211, 122, 245, 12, 63, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+            Id id2 = new Id(new byte[] { 211, 122, 245, 12, 64, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+
+            (id1 <= id2).Should().BeTrue();
+            (id2 >= id1).Should().BeTrue();
+        }
+
+        [Category("Unit")]
+        [Test]
+        public void Id_LtEqOp_Eq()
+        {
+            Id id1 = new Id(new byte[] { 211, 122, 245, 12, 63, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+            Id id2 = new Id(new byte[] { 211, 122, 245, 12, 63, 160, 111, 239
+                , 211, 231, 225, 143, 185, 85, 104, 185, 11, 132, 160, 151 }
+            , 160);
+
+            (id1 <= id2).Should().BeTrue();
+            (id2 >= id1).Should().BeTrue();
         }
 
         [Category("Unit")]

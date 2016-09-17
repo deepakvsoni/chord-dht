@@ -149,5 +149,36 @@
             node.RequestShutdown();
             clientNode.RequestShutdown();
         }
+
+        [Category("Integration")]
+        [Test]
+        public void Node_JoinRing_Three()
+        {
+            NodeBuilder builder = new NodeBuilder();
+            builder.SetUri(new Uri("sock://localhost:5000"));
+
+            Node node = builder.Build();
+            node.Start();
+
+            node.Channel.State.Should().Be(State.Accepting);
+
+            builder.SetUri(new Uri("sock://localhost:5001"));
+
+            Node clientNode = builder.Build();
+            clientNode.JoinRing(node.Channel.Url);
+
+            clientNode.Successors.Count.Should().Be(1);
+
+            builder.SetUri(new Uri("sock://localhost:5002"));
+
+            Node clientNode2 = builder.Build();
+            clientNode2.JoinRing(node.Channel.Url);
+
+            clientNode2.Successors.Count.Should().Be(1);
+
+            node.RequestShutdown();
+            clientNode.RequestShutdown();
+            clientNode2.RequestShutdown();
+        }
     }
 }

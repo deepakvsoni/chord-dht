@@ -34,5 +34,18 @@
             get;
             set;
         }
+
+        public void Clear()
+        {
+            BufferList.Clear();
+            //Socket = null;
+            if (null != Data)
+            {
+                for (int i = 0; i < Data.Length; ++i)
+                {
+                    Data[i] = 0;
+                }
+            }
+        }
     }
 }

@@ -48,8 +48,9 @@
 
             Info = new NodeInfo { Id = id, Uri = channel.Url };
 
-            FingerTable = new FingerTable(Id.MaxNoOfBits);
-            Successors = new SortedList<Id, INodeInfo>(2);
+            FingerTable = new FingerTable(Info);
+            Successors = new SortedList<Id, INodeInfo>(
+                RingContext.Default.NoOfSuccessorsToBeMaintained);
         }
 
         public Id Id

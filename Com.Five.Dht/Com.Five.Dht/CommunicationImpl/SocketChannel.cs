@@ -236,6 +236,9 @@
                     if (token.Socket.Available == 0)
                     {
                         HandleReceive(token);
+
+                        token.Clear();
+
                         _pool.Push(readEa);
                     }
                     else if (!token.Socket.ReceiveAsync(readEa))
@@ -328,6 +331,8 @@
                 _openSockets.Remove(token.Socket);
             }
 
+            token.Clear();
+            
             _pool.Push(ea);
 
             _countdownEvent.Signal();
