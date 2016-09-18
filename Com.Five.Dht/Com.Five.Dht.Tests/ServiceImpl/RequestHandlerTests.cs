@@ -354,5 +354,254 @@
             response.Should().NotBeNull();
             response.Should().BeAssignableTo<PingResponse>();
         }
+
+        [Category("Unit")]
+        [Test]
+        public async Task RequestHandler_GetSuccessor_ZeroSuccessors()
+        {
+            Id _89Id = new Id(new byte[] { 89 }, 8);
+            Id _160Id = new Id(new byte[] { 160 }, 8);
+            Id _120Id = new Id(new byte[] { 120 }, 8);
+            Id _32Id = new Id(new byte[] { 32 }, 8);
+            Id _240Id = new Id(new byte[] { 240 }, 8);
+
+            SortedList<Id, INodeInfo> mainNodeSuccessors 
+                = new SortedList<Id, INodeInfo>();
+
+            INode mainNode = Substitute.For<INode>();
+            mainNode.Id.Returns(_89Id);
+            mainNode.Successors.Returns(mainNodeSuccessors);
+
+            mainNode.Info.Returns(new NodeInfo
+            {
+                Id = _89Id,
+                Uri = new Uri("sock://localhost:5000")
+            });
+            INodeInfo _120Node = new NodeInfo
+            {
+                Id = _120Id,
+                Uri = new Uri("sock://localhost:5001")
+            };
+
+            FingerTable table = new FingerTable(mainNode.Info);
+            mainNode.FingerTable.Returns(table);
+
+            RequestHandler reqHandler = new RequestHandler(_formatter);
+            reqHandler.Node = mainNode;
+
+            GetSuccessor getSuccessor = new GetSuccessor
+            {
+                Id = _120Id,
+                Url = _120Node.Uri
+            };
+            byte[] getSuccessorBytes = _formatter.GetBytes(getSuccessor);
+
+            byte[] responseBytes = await reqHandler.Handle(
+                getSuccessorBytes.Length
+                , GetArray(new ArraySegment<byte>(getSuccessorBytes)));
+
+            object response = _formatter.GetObject(responseBytes.Length
+                , GetArray(new ArraySegment<byte>(responseBytes)));
+
+            response.Should().NotBeNull();
+            response.Should().BeAssignableTo<GetSuccessorResponse>();
+
+            GetSuccessorResponse getSucResponse 
+                = (GetSuccessorResponse)response;
+            getSucResponse.NodeInfo.Id.Should().Be(mainNode.Id);
+
+            mainNode.Successors.Count.Should().Be(1);
+        }
+
+        [Category("Unit")]
+        [Test]
+        public async Task RequestHandler_GetSuccessor_OneSuccessor()
+        {
+            Id _89Id = new Id(new byte[] { 89 }, 8);
+            Id _160Id = new Id(new byte[] { 160 }, 8);
+            Id _120Id = new Id(new byte[] { 120 }, 8);
+
+            SortedList<Id, INodeInfo> mainNodeSuccessors
+                = new SortedList<Id, INodeInfo>();
+
+            INode mainNode = Substitute.For<INode>();
+            mainNode.Id.Returns(_89Id);
+            mainNode.Successors.Returns(mainNodeSuccessors);
+
+            mainNode.Info.Returns(new NodeInfo
+            {
+                Id = _89Id,
+                Uri = new Uri("sock://localhost:5000")
+            });
+
+            INodeInfo _160Node = new NodeInfo
+            {
+                Id = _160Id,
+                Uri = new Uri("sock://localhost:5002")
+            };
+            INodeInfo _120Node = new NodeInfo
+            {
+                Id = _120Id,
+                Uri = new Uri("sock://localhost:5001")
+            };
+
+            mainNodeSuccessors.Add(_160Id, _160Node);
+            
+            FingerTable table = new FingerTable(mainNode.Info);
+            table.AddEntry(_160Node);
+            mainNode.FingerTable.Returns(table);
+
+            RequestHandler reqHandler = new RequestHandler(_formatter);
+            reqHandler.Node = mainNode;
+
+            GetSuccessor getSuccessor = new GetSuccessor
+            {
+                Id = _120Id,
+                Url = _120Node.Uri
+            };
+            byte[] getSuccessorBytes = _formatter.GetBytes(getSuccessor);
+
+            byte[] responseBytes = await reqHandler.Handle(
+                getSuccessorBytes.Length
+                , GetArray(new ArraySegment<byte>(getSuccessorBytes)));
+
+            object response = _formatter.GetObject(responseBytes.Length
+                , GetArray(new ArraySegment<byte>(responseBytes)));
+
+            response.Should().NotBeNull();
+            response.Should().BeAssignableTo<GetSuccessorResponse>();
+
+            GetSuccessorResponse getSucResponse
+                = (GetSuccessorResponse)response;
+            getSucResponse.NodeInfo.Id.Should().Be(_160Id);
+
+            mainNode.Successors.Count.Should().Be(2);
+        }
+
+        [Category("Unit")]
+        [Test]
+        public async Task RequestHandler_GetSuccessor_TwoSuccessor()
+        {
+            Id _89Id = new Id(new byte[] { 89 }, 8);
+            Id _160Id = new Id(new byte[] { 160 }, 8);
+            Id _120Id = new Id(new byte[] { 120 }, 8);
+            Id _32Id = new Id(new byte[] { 32 }, 8);
+            Id _240Id = new Id(new byte[] { 240 }, 8);
+
+            SortedList<Id, INodeInfo> mainNodeSuccessors
+                = new SortedList<Id, INodeInfo>();
+
+
+            INode mainNode = Substitute.For<INode>();
+            mainNode.Id.Returns(_89Id);
+            mainNode.Successors.Returns(mainNodeSuccessors);
+
+            mainNode.Info.Returns(new NodeInfo
+            {
+                Id = _89Id,
+                Uri = new Uri("sock://localhost:5000")
+            });
+
+            INodeInfo _160Node = new NodeInfo
+            {
+                Id = _160Id,
+                Uri = new Uri("sock://localhost:5002")
+            };
+            INodeInfo _120Node = new NodeInfo
+            {
+                Id = _120Id,
+                Uri = new Uri("sock://localhost:5001")
+            };
+            INodeInfo _32Node = new NodeInfo
+            {
+                Id = _32Id,
+                Uri = new Uri("sock://localhost:5004")
+            };
+            INodeInfo _240Node = new NodeInfo
+            {
+                Id = _240Id,
+                Uri = new Uri("sock://localhost:5005")
+            };
+
+            mainNodeSuccessors.Add(_160Id, _160Node);
+            mainNodeSuccessors.Add(_32Id, _32Node);
+
+            FingerTable table = new FingerTable(mainNode.Info);
+            table.AddEntry(_160Node);
+            table.AddEntry(_32Node);
+            mainNode.FingerTable.Returns(table);
+
+            RequestHandler reqHandler = new RequestHandler(_formatter);
+            reqHandler.Node = mainNode;
+
+            GetSuccessor getSuccessor = new GetSuccessor
+            {
+                Id = _240Id,
+                Url = _240Node.Uri
+            };
+            byte[] getSuccessorBytes = _formatter.GetBytes(getSuccessor);
+
+            byte[] responseBytes = await reqHandler.Handle(
+                getSuccessorBytes.Length
+                , GetArray(new ArraySegment<byte>(getSuccessorBytes)));
+
+            object response = _formatter.GetObject(responseBytes.Length
+                , GetArray(new ArraySegment<byte>(responseBytes)));
+
+            response.Should().NotBeNull();
+            response.Should().BeAssignableTo<GetSuccessorResponse>();
+
+            GetSuccessorResponse getSucResponse
+                = (GetSuccessorResponse)response;
+            getSucResponse.NodeInfo.Id.Should().Be(_32Id);
+
+            mainNode.Successors.Count.Should().Be(3);
+        }
+
+        [Category("Integration")]
+        [Test]
+        public async Task RequestHandler_GetSuccessor_OneSuccessorButNotInRange()
+        {
+            NodeBuilder builder = new NodeBuilder();
+            builder.SetUri(new Uri("sock://localhost:5000"));
+
+            INode mainNode = builder.Build();
+            mainNode.Start();
+
+            builder.SetUri(new Uri("sock://localhost:5001"));
+            INode node2 = builder.Build();
+
+            node2.JoinRing(mainNode.Channel.Url);
+            
+            GetSuccessor getSuccessor = new GetSuccessor
+            {
+                Id = new Id(new byte[] { 132, 81, 108, 234, 18, 90, 80, 3 }, 64),
+                Url = node2.Channel.Url
+            };
+
+            RequestHandler reqHandler = new RequestHandler(_formatter);
+            reqHandler.Node = mainNode;
+
+            byte[] getSuccessorBytes = _formatter.GetBytes(getSuccessor);
+
+            byte[] responseBytes = await reqHandler.Handle(
+                getSuccessorBytes.Length
+                , GetArray(new ArraySegment<byte>(getSuccessorBytes)));
+
+            object response = _formatter.GetObject(responseBytes.Length
+                , GetArray(new ArraySegment<byte>(responseBytes)));
+
+            response.Should().NotBeNull();
+            response.Should().BeAssignableTo<GetSuccessorResponse>();
+
+            GetSuccessorResponse getSucResponse
+                = (GetSuccessorResponse)response;
+            getSucResponse.NodeInfo.Id.Should().Be(mainNode.Id);
+
+            mainNode.Successors.Count.Should().Be(1);
+
+            mainNode.RequestShutdown();
+            node2.RequestShutdown();
+        }
     }
 }

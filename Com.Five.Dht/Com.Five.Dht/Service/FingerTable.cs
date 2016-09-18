@@ -42,8 +42,8 @@
             for (int i = _nodes.Length - 1; i >= 0; --i)
             {
                 if(null != _nodes[i] 
-                    && _ownerNode.Id <= nodeId
-                    && _nodes[i].Id <= nodeId)
+                    && _nodes[i].Id.Bytes.IsBetween(_ownerNode.Id.Bytes,
+                    nodeId.Bytes))
                 {
                     return _nodes[i];
                 }

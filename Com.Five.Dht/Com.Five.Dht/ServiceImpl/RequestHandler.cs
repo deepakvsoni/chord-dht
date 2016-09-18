@@ -195,8 +195,8 @@
                                 Uri = getSuccessor.Url
                             };
                             /*
-                             * Adding this as my successor as this is between and
-                             * largest successor
+                             * Adding this as my successor as this is placed
+                             * between me and largest successor on ring.
                              */
                             Node.Successors.Add(info.Id, info);
                             Node.FingerTable.AddEntry(info);
@@ -218,7 +218,7 @@
                             }
                             return new GetSuccessorResponse
                             {
-                                NodeInfo = Node.Successors[Node.Successors.Keys[0]]
+                                NodeInfo = Node.Successors[successorId]
                             };
                         }
 

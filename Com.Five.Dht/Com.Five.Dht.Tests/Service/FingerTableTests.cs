@@ -304,6 +304,53 @@
 
         [Category("Unit")]
         [Test]
+        public void FingerTable_AddEntry_6()
+        {
+            FingerTable table = new FingerTable(_eightBitNode);
+
+            Id _160Id = new Id(new byte[] { 160 }, 8);
+            Id _120Id = new Id(new byte[] { 120 }, 8);
+            Id _32Id = new Id(new byte[] { 32 }, 8);
+            Id _240Id = new Id(new byte[] { 240 }, 8);
+
+            INodeInfo _160Node = new NodeInfo
+            {
+                Id = _160Id,
+                Uri = new Uri("sock://localhost:5002")
+            };
+            INodeInfo _120Node = new NodeInfo
+            {
+                Id = _120Id,
+                Uri = new Uri("sock://localhost:5001")
+            };
+            INodeInfo _32Node = new NodeInfo
+            {
+                Id = _32Id,
+                Uri = new Uri("sock://localhost:5004")
+            };
+            INodeInfo _240Node = new NodeInfo
+            {
+                Id = _240Id,
+                Uri = new Uri("sock://localhost:5005")
+            };
+            table.AddEntry(_120Node);
+            table.AddEntry(_160Node);
+            table.AddEntry(_32Node);
+            table.AddEntry(_240Node);
+
+            INodeInfo[] nodes = table.GetNodes();
+            nodes[0].Id.Should().Be(_120Id);
+            nodes[1].Id.Should().Be(_120Id);
+            nodes[2].Id.Should().Be(_120Id);
+            nodes[3].Id.Should().Be(_120Id);
+            nodes[4].Id.Should().Be(_120Id);
+            nodes[5].Id.Should().Be(_160Id);
+            nodes[6].Id.Should().Be(_160Id);
+            nodes[7].Id.Should().Be(_240Id);
+        }
+
+        [Category("Unit")]
+        [Test]
         public void FingerTable_AddEntry_Null()
         {
             FingerTable table = new FingerTable(_eightBitNode);
