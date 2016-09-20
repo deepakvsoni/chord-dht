@@ -141,6 +141,12 @@
              */
             INodeInfo predecessor = Node.FingerTable.GetClosestPredecessor(id);
 
+            //To avoid recursive calls to self.
+            if(predecessor.Id == Node.Id)
+            {
+                return predecessor;
+            }
+
             NodeClientBuilder builder = new NodeClientBuilder();
             builder.SetServerUri(predecessor.Url);
 

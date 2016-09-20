@@ -134,6 +134,8 @@
         {
             Start();
 
+            Successors.Clear();
+
             DoJoinRing(url);
         }
 
@@ -211,6 +213,8 @@
                 throw new ApplicationException("Could not open channel.");
             }
             _l.InfoFormat("Node {0} started", _channel.Url);
+
+            Successors.Add(Id, Info);
         }
 
         #region IDisposable Support
