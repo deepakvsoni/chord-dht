@@ -22,19 +22,27 @@
         Dictionary<Type, Handler> _handlers
             = new Dictionary<Type, Handler>();
 
+        IdGenerator _idGenerator;
+
         public INode Node
         {
             get;
             set;
         }
 
-        public RequestHandler(IRequestResponseFormatter formatter)
+        public RequestHandler(IRequestResponseFormatter formatter,
+            IdGenerator idGenerator)
         {
             if (null == formatter)
             {
                 throw new ArgumentNullException(nameof(formatter));
             }
+            if(null == idGenerator)
+            {
+                throw new ArgumentNullException(nameof(idGenerator));
+            }
             _formatter = formatter;
+            _idGenerator = idGenerator;
 
             _handlers[typeof(Shutdown)] = HandleShutdown;
             _handlers[typeof(Put)] = HandlePut;
@@ -42,6 +50,7 @@
             _handlers[typeof(Remove)] = HandleRemove;
             _handlers[typeof(Ping)] = HandlePing;
             _handlers[typeof(GetSuccessor)] = HandleGetSuccessor;
+            _handlers[typeof(Notify)] = HandleNotify;
         }
 
         public async Task<byte[]> Handle(int totalBytes
@@ -53,7 +62,7 @@
             {
                 reqObj = (Request)_formatter.GetObject(totalBytes
                     , req);
-                _l.InfoFormat("Received request: {0}", reqObj);
+                _l.DebugFormat("Received request: {0}", reqObj);
             }
             catch (InvalidCastException e)
             {
@@ -98,13 +107,85 @@
             });
         }
 
+        async Task<INodeInfo> GetSuccessorNodeForId(Id id, Uri url)
+        {
+            //This is the only node in the ring.
+            if (0 == Node.Successors.Count)
+            {
+                _l.Debug(
+                    "Don't have any successors returning myself as successor.");
+                return Node.Info;
+            }
+            /*
+             * Checking if Requestor is in between me and my
+             * successor or between my successors.
+             */
+            Id currentId = Node.Id;
+            foreach (Id successorId in Node.Successors.Keys)
+            {
+                if (id.Bytes.IsBetween(currentId.Bytes
+                    , successorId.Bytes))
+                {
+                    _l.Debug("Found successor in my successors list.");
+                    return Node.Successors[successorId];
+                }
+
+                currentId = successorId;
+            }
+
+            _l.Info(
+                "Searching for predecessor node in Finger table and pass request to it.");
+            /*
+             * Get the predecessor from finger table and send request
+             * to it.
+             */
+            INodeInfo predecessor = Node.FingerTable.GetClosestPredecessor(id);
+
+            NodeClientBuilder builder = new NodeClientBuilder();
+            builder.SetServerUri(predecessor.Url);
+
+            INodeClient client = builder.Build();
+
+            INodeInfo successorFromPredecessor 
+                = await client.GetSuccessor(id, url);
+
+            /*
+             * If predecessor could not return the successor then
+             * use current node as successor.
+             */
+            if (null == successorFromPredecessor)
+            {
+                successorFromPredecessor = Node.Info;
+            }
+
+            return successorFromPredecessor;
+        }
+
         async Task<Response> HandlePut(Request request)
         {
-
-            //TODO: This should find the actual node.
             Put put = (Put)request;
 
-            _l.DebugFormat("Received request to PUT at key {0}.", put.Key);
+            _l.DebugFormat("Received request to PUT for key {0}.", put.Key);
+
+            INodeInfo handlerNode = await GetSuccessorNodeForId(
+                _idGenerator.Generate(put.Key), Node.Info.Url);
+            if (null != handlerNode &&
+                handlerNode.Id != Node.Id)
+            {
+                _l.DebugFormat("Relaying PUT request to {0}.", handlerNode.Url);
+
+                NodeClientBuilder builder = new NodeClientBuilder();
+                builder.SetServerUri(handlerNode.Url);
+
+                INodeClient client = builder.Build();
+                if(await client.Put(put.Key, put.Value))
+                {
+                    return PutResponse.Success;
+                }
+                return PutResponse.Failed;
+            }
+
+            _l.DebugFormat("Saving {0} at {1}", put.Value, put.Key);
 
             bool putSuccess = await Node.Entries.Put(put.Key, put.Value);
 
@@ -121,6 +202,23 @@
 
             _l.DebugFormat("Received a GET request for key {0}.", get.Key);
 
+            INodeInfo handlerNode = await GetSuccessorNodeForId(
+               _idGenerator.Generate(get.Key), Node.Info.Url);
+            if (null != handlerNode &&
+                handlerNode.Id != Node.Id)
+            {
+                _l.DebugFormat("Relaying GET request to {0}."
+                    , handlerNode.Url);
+
+                NodeClientBuilder builder = new NodeClientBuilder();
+                builder.SetServerUri(handlerNode.Url);
+
+                INodeClient client = builder.Build();
+                object value = await client.Get(get.Key);
+
+                return new GetResponse { Status = Status.Ok, Value = value };
+            }
+
             object val = await Node.Entries.Get(get.Key);
             return new GetResponse { Status = Status.Ok, Value = val };
         }
@@ -131,6 +229,26 @@
 
             _l.DebugFormat("Received a REMOVE request for key {0}.",
                 remove.Key);
+
+            INodeInfo handlerNode = await GetSuccessorNodeForId(
+               _idGenerator.Generate(remove.Key), Node.Info.Url);
+            if (null != handlerNode &&
+                handlerNode.Id != Node.Id)
+            {
+                _l.DebugFormat("Relaying REMOVE request to {0}."
+                    , handlerNode.Url);
+
+                NodeClientBuilder builder = new NodeClientBuilder();
+                builder.SetServerUri(handlerNode.Url);
+
+                INodeClient client = builder.Build();
+                if(await client.Remove(remove.Key))
+                {
+                    return RemoveResponse.Success;
+                }
+
+                return RemoveResponse.Failed;
+            }
 
             bool removed = await Node.Entries.Remove(remove.Key);
             return removed ? RemoveResponse.Success
@@ -146,129 +264,59 @@
             });
         }
 
-        Task<Response> HandleGetSuccessor(Request request)
+        Task<Response> HandleNotify(Request request)
         {
-            return Task.Factory.StartNew<Response>(() =>
-            {
-                try
+            return Task.Factory.StartNew<Response>(() => {
+                Notify notify = (Notify)request;
+
+                _l.DebugFormat("Received a NOTIFY request from {0}."
+                    , notify.Url);
+
+                /*
+                 * If I don't have a predecessor then set notifying node as
+                 * predecessor.
+                 * Or If the notifying node is between my predecessor and me 
+                 * then set it as my predecessor.
+                 */
+                if (null == Node.Predecessor 
+                || notify.Id.Bytes.IsBetween(Node.Predecessor.Id.Bytes,
+                    Node.Id.Bytes))
                 {
-                    GetSuccessor getSuccessor = (GetSuccessor)request;
-
-                    _l.DebugFormat("Received a GET SUCCESSOR request from {0}."
-                        , getSuccessor.Url);
-
-
-                    //This is the only node in the ring.
-                    if (0 == Node.Successors.Count)
+                    _l.InfoFormat("Updating my predecessor to {0}."
+                        , notify.Url);
+                    Node.Predecessor = new NodeInfo
                     {
-                        _l.Debug(
-                            "Don't have any successors returning myself as successor.");
-                        NodeInfo info = new NodeInfo
-                        {
-                            Id = getSuccessor.Id,
-                            Uri = getSuccessor.Url
-                        };
-                        Node.Successors.Add(info.Id, info);
-                        Node.FingerTable.AddEntry(info);
-
-                        return new GetSuccessorResponse
-                        {
-                            NodeInfo = Node.Info
-                        };
-                    }
-                    /*
-                     * Checking if Requestor is to be placed in between me and my
-                     * successor or between my successors.
-                     */
-                    Id currentId = Node.Id;
-                    foreach (Id successorId in Node.Successors.Keys)
-                    {
-                        //if (currentId <= getSuccessor.Id &&
-                        //    getSuccessor.Id <= successorId)
-                        if(getSuccessor.Id.Bytes.IsBetween(currentId.Bytes
-                            , successorId.Bytes))
-                        {
-                            _l.Debug("Found successor in my successors list.");
-                            NodeInfo info = new NodeInfo
-                            {
-                                Id = getSuccessor.Id,
-                                Uri = getSuccessor.Url
-                            };
-                            /*
-                             * Adding this as my successor as this is placed
-                             * between me and largest successor on ring.
-                             */
-                            Node.Successors.Add(info.Id, info);
-                            Node.FingerTable.AddEntry(info);
-
-                            /*
-                             * If number of successors exceeds the capacity remove
-                             * the last successor
-                             */
-                            if (Node.Successors.Count > Node.Successors.Capacity)
-                            {
-                                INodeInfo nodeToBeRemoved
-                                    = Node.Successors[Node.Successors.Keys[
-                                        Node.Successors.Count]];
-
-                                _l.DebugFormat(
-                                    "Removing node {0} from successors list as the number of successors exceeds capacity.",
-                                    nodeToBeRemoved.Uri);
-                                Node.Successors.Remove(nodeToBeRemoved.Id);
-                            }
-                            return new GetSuccessorResponse
-                            {
-                                NodeInfo = Node.Successors[successorId]
-                            };
-                        }
-
-                        currentId = successorId;
-                    }
-
-                    _l.Info("Searching for predecessor node in Finger table and pass request to it.");
-                    /*
-                     * Get the predecessor from finger table and send request
-                     * to it.
-                     */
-                    INodeInfo predecessor 
-                        = Node.FingerTable.GetClosestPredecessor(
-                            getSuccessor.Id);
-
-                    NodeClientBuilder builder = new NodeClientBuilder();
-                    builder.SetServerUri(predecessor.Uri);
-
-                    INodeClient client = builder.Build();
-
-                    Task<INodeInfo> successorTask
-                        = client.GetSuccessor(getSuccessor.Id
-                            , getSuccessor.Url);
-
-                    INodeInfo successorFromPredecessor = successorTask.Result;
-
-                    /*
-                     * If predecessor could not return the successor then
-                     * use current node as successor.
-                     */ 
-                    if (null == successorFromPredecessor)
-                    {
-                        successorFromPredecessor = Node.Info;
-                    }
-
-                    /*
-                     * No node found whose Id is greater the requesting node's Id.
-                     * Returning the first node to wrap around the ring.
-                     */
-                    return new GetSuccessorResponse
-                    {
-                        NodeInfo = successorFromPredecessor
+                        Id = notify.Id,
+                        Url = notify.Url
                     };
                 }
-                catch (Exception e)
-                {
-                    _l.Error(e);
-                    return InternalErrorResponse.I;
-                }
+                return NotifyResponse.I;
             });
+        }
+
+        async Task<Response> HandleGetSuccessor(Request request)
+        {
+
+            try
+            {
+                GetSuccessor getSuccessor = (GetSuccessor)request;
+
+                _l.DebugFormat("Received a GET SUCCESSOR request from {0}."
+                    , getSuccessor.Url);
+
+                INodeInfo successor = await GetSuccessorNodeForId(
+                    getSuccessor.Id, getSuccessor.Url);
+
+                return new GetSuccessorResponse
+                {
+                    NodeInfo = successor
+                };
+            }
+            catch (Exception e)
+            {
+                _l.Error(e);
+                return InternalErrorResponse.I;
+            }
         }
     }
 }

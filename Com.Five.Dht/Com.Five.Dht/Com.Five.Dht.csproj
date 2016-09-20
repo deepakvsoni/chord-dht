@@ -50,7 +50,9 @@
   <ItemGroup>
     <Compile Include="Common\ByteHelpers.cs" />
     <Compile Include="Communication\Requests\GetSuccessor.cs" />
+    <Compile Include="Communication\Requests\Notify.cs" />
     <Compile Include="Communication\Responses\GetSuccessorResponse.cs" />
+    <Compile Include="Communication\Responses\NotifyResponse.cs" />
     <Compile Include="Data\IdGenerator.cs" />
     <Compile Include="ServiceImpl\NodeInfo.cs" />
     <Compile Include="ServiceImpl\RequestResponseBinaryFormatter.cs" />

@@ -29,9 +29,9 @@
             return this;
         }
 
-        public NodeBuilder SetUri(Uri uri)
+        public NodeBuilder SetUrl(Uri url)
         {
-            _uri = uri;
+            _uri = url;
             return this;
         }
 
@@ -87,7 +87,7 @@
             IRequestResponseFormatter formatter = _requestResponseFormatter ??
                 new RequestResponseBinaryFormatter();
             IRequestHandler requestHandler = _requestHandler ??
-                new RequestHandler(formatter);
+                new RequestHandler(formatter, _idGenerator);
 
             Id id = _idGenerator.Generate(_uri.AbsolutePath + ":"
                 + _uri.Port);

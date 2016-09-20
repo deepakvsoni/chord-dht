@@ -1,11 +1,10 @@
-﻿namespace Com.Five.Dht.ServiceImpl
+﻿namespace Com.Five.Dht.Communication.Requests
 {
-    using System;
     using Data;
-    using Service;
+    using System;
 
     [Serializable]
-    public class NodeInfo : INodeInfo
+    public class Notify : Request
     {
         public Id Id
         {

@@ -10,7 +10,7 @@
             get;
         }
 
-        Uri Uri
+        Uri Url
         {
             get;
         }

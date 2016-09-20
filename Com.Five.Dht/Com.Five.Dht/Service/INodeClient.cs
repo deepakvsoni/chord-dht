@@ -20,5 +20,7 @@
         Task<bool> Remove(string key);
 
         Task<bool> Ping();
+
+        Task<bool> Notify(Id id, Uri url);
     }
 }

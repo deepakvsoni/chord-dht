@@ -24,7 +24,7 @@
 
         SortedList<Id, INodeInfo> Successors { get; }
 
-        void JoinRing(Uri uri);
+        void JoinRing(Uri url);
 
         void Start();
 

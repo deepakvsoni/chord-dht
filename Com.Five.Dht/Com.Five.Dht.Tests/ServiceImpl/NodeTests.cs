@@ -118,7 +118,7 @@
         public void Node_CreateRing_SocketChannel()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUri(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"));
 
             Node node = builder.Build();
             Action a = () => node.Start();
@@ -132,14 +132,14 @@
         public void Node_JoinRing_SocketChannel()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUri(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"));
 
             Node node = builder.Build();
             node.Start();
 
             node.Channel.State.Should().Be(State.Accepting);
 
-            builder.SetUri(new Uri("sock://localhost:5001"));
+            builder.SetUrl(new Uri("sock://localhost:5001"));
 
             Node clientNode = builder.Build();
             clientNode.JoinRing(node.Channel.Url);
@@ -155,21 +155,21 @@
         public void Node_JoinRing_Three()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUri(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"));
 
             Node node = builder.Build();
             node.Start();
 
             node.Channel.State.Should().Be(State.Accepting);
 
-            builder.SetUri(new Uri("sock://localhost:5001"));
+            builder.SetUrl(new Uri("sock://localhost:5001"));
 
             Node clientNode = builder.Build();
             clientNode.JoinRing(node.Channel.Url);
 
             clientNode.Successors.Count.Should().Be(1);
 
-            builder.SetUri(new Uri("sock://localhost:5002"));
+            builder.SetUrl(new Uri("sock://localhost:5002"));
 
             Node clientNode2 = builder.Build();
             clientNode2.JoinRing(node.Channel.Url);

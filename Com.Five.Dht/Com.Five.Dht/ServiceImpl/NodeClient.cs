@@ -10,7 +10,8 @@
     public class NodeClient : INodeClient
     {
         //TODO: IChannelClient should be a factory.
-
+        //TODO: Correct method params. Id and Uri of calling node should 
+        //not be parameters.
         public NodeClient(IChannelClient channelClient,
             IRequestResponseFormatter formatter)
         {
@@ -66,6 +67,29 @@
                 return null;
             }
             return null;
+        }
+
+        public async Task<bool> Notify(Id id, Uri url)
+        {
+            if (ChannelClient.Connect())
+            {
+                Communication.Requests.Notify notify
+                    = new Communication.Requests.Notify
+                    {
+                        Id = id,
+                        Url = url
+                    };
+
+                byte[] request = Formatter.GetBytes(notify);
+                byte[] responseBytes
+                    = await ChannelClient.SendRequest(request);
+
+                NotifyResponse response
+                    = (NotifyResponse)Formatter.GetObject(responseBytes);
+
+                return (response.Status == Status.Ok);
+            }
+            return false;
         }
 
         public Task<bool> Ping()

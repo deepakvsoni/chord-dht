@@ -28,25 +28,25 @@
             _node = new NodeInfo
             {
                 Id = id,
-                Uri = _uri
+                Url = _uri
             };
 
             _eightBitNode = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = _uri
+                Url = _uri
             };
 
             _sixteenBitNode = new NodeInfo
             {
                 Id = sixteenBitId,
-                Uri = _uri
+                Url = _uri
             };
 
             _sixtyFourBitNode = new NodeInfo
             {
                 Id = sixtyFourBitId,
-                Uri = _uri
+                Url = _uri
             };
         }
 
@@ -88,17 +88,17 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo info3 = new NodeInfo
             {
                 Id = eightBitId3,
-                Uri = new Uri("sock://localhost:5003")
+                Url = new Uri("sock://localhost:5003")
             };
             table.AddEntry(info);
             table.AddEntry(info2);
@@ -142,7 +142,7 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
 
             table.AddEntry(info);
@@ -166,12 +166,12 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             table.AddEntry(info);
             table.AddEntry(info2);
@@ -199,17 +199,17 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo info3 = new NodeInfo
             {
                 Id = eightBitId3,
-                Uri = new Uri("sock://localhost:5003")
+                Url = new Uri("sock://localhost:5003")
             };
             table.AddEntry(info);
             table.AddEntry(info2);
@@ -233,7 +233,7 @@
             _eightBitNode = new NodeInfo
             {
                 Id = new Id(new byte[] { 32 }, 8),
-                Uri = new Uri("sock://localhost:5000")
+                Url = new Uri("sock://localhost:5000")
             };
 
             FingerTable table = new FingerTable(_eightBitNode);
@@ -244,12 +244,12 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             table.AddEntry(info2);
             table.AddEntry(info);
@@ -276,17 +276,17 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo info3 = new NodeInfo
             {
                 Id = eightBitId3,
-                Uri = new Uri("sock://localhost:5004")
+                Url = new Uri("sock://localhost:5004")
             };
             table.AddEntry(info2);
             table.AddEntry(info);
@@ -316,22 +316,22 @@
             INodeInfo _160Node = new NodeInfo
             {
                 Id = _160Id,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo _120Node = new NodeInfo
             {
                 Id = _120Id,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo _32Node = new NodeInfo
             {
                 Id = _32Id,
-                Uri = new Uri("sock://localhost:5004")
+                Url = new Uri("sock://localhost:5004")
             };
             INodeInfo _240Node = new NodeInfo
             {
                 Id = _240Id,
-                Uri = new Uri("sock://localhost:5005")
+                Url = new Uri("sock://localhost:5005")
             };
             table.AddEntry(_120Node);
             table.AddEntry(_160Node);
@@ -372,17 +372,17 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo info3 = new NodeInfo
             {
                 Id = eightBitId3,
-                Uri = new Uri("sock://localhost:5004")
+                Url = new Uri("sock://localhost:5004")
             };
             table.AddEntry(info2);
             table.AddEntry(info);
@@ -404,7 +404,7 @@
             _eightBitNode = new NodeInfo
             {
                 Id = new Id(new byte[] { 32 }, 8),
-                Uri = new Uri("sock://localhost:5000")
+                Url = new Uri("sock://localhost:5000")
             };
 
             FingerTable table = new FingerTable(_eightBitNode);
@@ -416,17 +416,17 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo info3 = new NodeInfo
             {
                 Id = eightBitId3,
-                Uri = new Uri("sock://localhost:5004")
+                Url = new Uri("sock://localhost:5004")
             };
             table.AddEntry(info2);
             table.AddEntry(info);
@@ -452,7 +452,7 @@
             _eightBitNode = new NodeInfo
             {
                 Id = new Id(new byte[] { 32 }, 8),
-                Uri = new Uri("sock://localhost:5000")
+                Url = new Uri("sock://localhost:5000")
             };
 
             FingerTable table = new FingerTable(_eightBitNode);
@@ -464,17 +464,17 @@
             INodeInfo info = new NodeInfo
             {
                 Id = eightBitId,
-                Uri = new Uri("sock://localhost:5002")
+                Url = new Uri("sock://localhost:5002")
             };
             INodeInfo info2 = new NodeInfo
             {
                 Id = eightBitId2,
-                Uri = new Uri("sock://localhost:5001")
+                Url = new Uri("sock://localhost:5001")
             };
             INodeInfo info3 = new NodeInfo
             {
                 Id = eightBitId3,
-                Uri = new Uri("sock://localhost:5004")
+                Url = new Uri("sock://localhost:5004")
             };
             table.AddEntry(info2);
             table.AddEntry(info);

@@ -1,6 +1,7 @@
 ﻿namespace Com.Five.Dht.Tests.ServiceImpl
 {
     using Dht.CommunicationImpl;
+    using Dht.Data;
     using Dht.DataImpl;
     using Dht.ServiceImpl;
     using FluentAssertions;
@@ -10,6 +11,8 @@
     [TestFixture]
     public class NodeBuilderTests
     {
+        IdGenerator _idGenerator = new IdGenerator(8, new SHA1HashFunction());
+
         [Category("Unit")]
         [Test]
         public void NodeBuilder_Construct()
@@ -32,7 +35,7 @@
         public void NodeBuilder_BuildDefaultNoErrors()
         {
             NodeBuilder b = new NodeBuilder();
-            b.SetUri(new Uri("sock://localhost:5000"));
+            b.SetUrl(new Uri("sock://localhost:5000"));
             Action a = () => b.Build();
             a.ShouldNotThrow();
         }
@@ -42,7 +45,7 @@
         public void NodeBuilder_BuildDefault()
         {
             NodeBuilder b = new NodeBuilder();
-            b.SetUri(new Uri("sock://localhost:5000"));
+            b.SetUrl(new Uri("sock://localhost:5000"));
 
             Node node = b.Build();
 
@@ -63,7 +66,7 @@
             NodeBuilder b = new NodeBuilder();
             Action a = () =>
                 b.SetRequestHandler(new RequestHandler(
-                    new RequestResponseBinaryFormatter()));
+                    new RequestResponseBinaryFormatter(), _idGenerator));
             a.ShouldNotThrow();
         }
 
@@ -85,7 +88,7 @@
         {
             NodeBuilder b = new NodeBuilder();
             Action a = () =>
-                b.SetUri(new Uri("sock://localhost:5000"));
+                b.SetUrl(new Uri("sock://localhost:5000"));
             a.ShouldNotThrow();
         }
 
@@ -115,14 +118,14 @@
         {
             NodeBuilder b = new NodeBuilder();
             Action a = () =>
-                b.SetUri(new Uri("sock://localhost:5000"))
+                b.SetUrl(new Uri("sock://localhost:5000"))
                     .SetChannel(new SocketChannel(
                         new Uri("sock://localhost:5000")))
                     .SetMaxNoOfBits(32)
                     .SetHashFunction(new SHA1HashFunction())
                     .SetDataEntries(new DataEntries())
                     .SetRequestHandler(new RequestHandler(
-                        new RequestResponseBinaryFormatter()));
+                        new RequestResponseBinaryFormatter(), _idGenerator));
             a.ShouldNotThrow();
         }
     }

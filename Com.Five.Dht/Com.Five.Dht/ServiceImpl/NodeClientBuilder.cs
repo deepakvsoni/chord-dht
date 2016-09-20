@@ -5,6 +5,7 @@
     using Service;
     using System;
 
+    //TODO: Factory for the communication module would be better?
     public class NodeClientBuilder
     {
         Uri _serverUri;

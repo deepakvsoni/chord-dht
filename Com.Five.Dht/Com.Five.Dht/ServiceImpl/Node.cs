@@ -46,7 +46,7 @@
 
             _channel.RegisterChannelListener(this);
 
-            Info = new NodeInfo { Id = id, Uri = channel.Url };
+            Info = new NodeInfo { Id = id, Url = channel.Url };
 
             FingerTable = new FingerTable(Info);
             Successors = new SortedList<Id, INodeInfo>(
@@ -130,23 +130,23 @@
             _channelClosed.WaitOne(10000);
         }
 
-        public void JoinRing(Uri uri)
+        public void JoinRing(Uri url)
         {
             Start();
 
-            DoJoinRing(uri);
+            DoJoinRing(url);
         }
 
-        void DoJoinRing(Uri uri)
+        void DoJoinRing(Uri url)
         {
-            _l.InfoFormat("Joining ring {0}", uri);
+            _l.InfoFormat("Joining ring {0}", url);
 
             NodeClientBuilder builder = new NodeClientBuilder();
-            builder.SetServerUri(uri);
+            builder.SetServerUri(url);
 
             INodeClient client = builder.Build();
 
-            _l.DebugFormat("Getting my successor from {0}", uri);
+            _l.DebugFormat("Getting my successor from {0}", url);
 
             Task<INodeInfo> successorNodeTask = client.GetSuccessor(Id
                 , Channel.Url);
@@ -159,9 +159,25 @@
                     RequestShutdown();
                     return;
                 }
-                _l.DebugFormat("My successor {0}", successorNode.Uri);
+                _l.DebugFormat("My successor {0}", successorNode.Url);
 
                 Successors.Add(successorNode.Id, successorNode);
+
+                builder.SetServerUri(successorNode.Url);
+
+                _l.Debug("Notifying successor about I being new predecessor.");
+                INodeClient successorClient = builder.Build();
+
+                Task<bool> notifyTask 
+                    = successorClient.Notify(Id, Channel.Url);
+
+                if (!notifyTask.Result)
+                {
+                    _l.Error("Error notifying successor.");
+                    //TODO: Should I shutdown if error notifying?
+                    RequestShutdown();
+                }
+                
             }
             catch (Exception e)
             {
