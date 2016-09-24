@@ -3,13 +3,15 @@
     using Communication;
     using CommunicationImpl;
     using Service;
+    using Service.Factory;
     using System;
 
-    //TODO: Factory for the communication module would be better?
     public class NodeClientBuilder
     {
-        Uri _serverUri;
+        Uri _serverUrl;
+        IRequestResponseFormatter _formatter;
         IChannelClient _channelClient;
+        IRingFactory _ringFactory;
 
         public NodeClientBuilder SetChannelClient(IChannelClient channelClient)
         {
@@ -17,25 +19,42 @@
             return this;
         }
 
-        public NodeClientBuilder SetServerUri(Uri serverUri)
+        public NodeClientBuilder SetServerUrl(Uri serverUrl)
         {
-            _serverUri = serverUri;
+            _serverUrl = serverUrl;
+            return this;
+        }
+
+        public NodeClientBuilder SetRingFactory(IRingFactory ringFactory)
+        {
+            _ringFactory = ringFactory;
+            return this;
+        }
+
+        public NodeClientBuilder SetRequestResponseFormatter(
+            IRequestResponseFormatter formatter)
+        {
+            _formatter = formatter;
             return this;
         }
 
         public NodeClient Build()
         {
-            if(null == _serverUri)
+            if(null == _serverUrl)
             {
                 throw new InvalidOperationException(
-                    "Channel Client or Server Uri required.");
+                    "Channel Client or Server Url required.");
+            }
+            if((null == _channelClient || null == _formatter) 
+                && null == _ringFactory)
+            {
+                throw new InvalidOperationException("Ring Factory required.");
             }
             IChannelClient channelClient = _channelClient ??
-                new SocketChannelClient(_serverUri);
+                _ringFactory.CreateChannelClient(_serverUrl);
 
-            //TODO: Use in builder.
-            IRequestResponseFormatter formatter
-                = new RequestResponseBinaryFormatter();
+            IRequestResponseFormatter formatter = _formatter ??
+                _ringFactory.Formatter;
 
             NodeClient client = new NodeClient(channelClient, formatter);
 

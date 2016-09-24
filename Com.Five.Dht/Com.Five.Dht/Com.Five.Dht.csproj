@@ -54,12 +54,14 @@
     <Compile Include="Communication\Responses\GetSuccessorResponse.cs" />
     <Compile Include="Communication\Responses\NotifyResponse.cs" />
     <Compile Include="Data\IdGenerator.cs" />
+    <Compile Include="ServiceImpl\FactoryImpl\NodeRingFactory.cs" />
     <Compile Include="ServiceImpl\NodeInfo.cs" />
     <Compile Include="ServiceImpl\RequestResponseBinaryFormatter.cs" />
     <Compile Include="CommunicationImpl\SocketAsyncEventArgsPool.cs" />
     <Compile Include="CommunicationImpl\SocketChannelClient.cs" />
     <Compile Include="CommunicationImpl\SocketChannel.cs" />
     <Compile Include="Communication\IChannelClientListener.cs" />
+    <Compile Include="Service\Factory\IRingFactory.cs" />
     <Compile Include="Service\FingerTable.cs" />
     <Compile Include="Service\INodeInfo.cs" />
     <Compile Include="Service\IRequestResponseFormatter.cs" />
@@ -96,22 +98,25 @@
     <Compile Include="ServiceImpl\NodeClientBuilder.cs" />
     <Compile Include="Service\INode.cs" />
     <Compile Include="Service\INodeClient.cs" />
-    <Compile Include="Service\RingContext.Designer.cs">
+    <Compile Include="Service\Ring.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>RingContext.settings</DependentUpon>
+      <DependentUpon>Ring.settings</DependentUpon>
     </Compile>
+    <Compile Include="Service\RingContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Communication\Communication.cd" />
+    <None Include="Data\Data.cd" />
     <None Include="packages.config" />
-    <None Include="Service\RingContext.settings">
+    <None Include="Service\Ring.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>RingContext.Designer.cs</LastGenOutput>
+      <LastGenOutput>Ring.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Service\Service.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -19,8 +19,7 @@
 
         IRequestResponseFormatter _formatter;
 
-        Dictionary<Type, Handler> _handlers
-            = new Dictionary<Type, Handler>();
+        Dictionary<Type, Handler> _handlers = new Dictionary<Type, Handler>();
 
         IdGenerator _idGenerator;
 
@@ -146,11 +145,9 @@
             {
                 return predecessor;
             }
-
-            NodeClientBuilder builder = new NodeClientBuilder();
-            builder.SetServerUri(predecessor.Url);
-
-            INodeClient client = builder.Build();
+            
+            INodeClient client 
+                = RingContext.Current.Factory.CreateNodeClient(predecessor.Url);
 
             INodeInfo successorFromPredecessor 
                 = await client.GetSuccessor(id, url);
@@ -175,15 +172,13 @@
 
             INodeInfo handlerNode = await GetSuccessorNodeForId(
                 _idGenerator.Generate(put.Key), Node.Info.Url);
-            if (null != handlerNode &&
-                handlerNode.Id != Node.Id)
+            if (null != handlerNode && handlerNode.Id != Node.Id)
             {
-                _l.DebugFormat("Relaying PUT request to {0}.", handlerNode.Url);
-
-                NodeClientBuilder builder = new NodeClientBuilder();
-                builder.SetServerUri(handlerNode.Url);
-
-                INodeClient client = builder.Build();
+                _l.DebugFormat("Relaying PUT request to {0}."
+                    , handlerNode.Url);
+                
+                INodeClient client 
+                    = RingContext.Current.Factory.CreateNodeClient(handlerNode.Url);
                 if(await client.Put(put.Key, put.Value))
                 {
                     return PutResponse.Success;
@@ -215,11 +210,10 @@
             {
                 _l.DebugFormat("Relaying GET request to {0}."
                     , handlerNode.Url);
+                
+                INodeClient client =
+                    RingContext.Current.Factory.CreateNodeClient(handlerNode.Url);
 
-                NodeClientBuilder builder = new NodeClientBuilder();
-                builder.SetServerUri(handlerNode.Url);
-
-                INodeClient client = builder.Build();
                 object value = await client.Get(get.Key);
 
                 return new GetResponse { Status = Status.Ok, Value = value };
@@ -243,11 +237,9 @@
             {
                 _l.DebugFormat("Relaying REMOVE request to {0}."
                     , handlerNode.Url);
-
-                NodeClientBuilder builder = new NodeClientBuilder();
-                builder.SetServerUri(handlerNode.Url);
-
-                INodeClient client = builder.Build();
+                
+                INodeClient client =
+                    RingContext.Current.Factory.CreateNodeClient(handlerNode.Url);
                 if(await client.Remove(remove.Key))
                 {
                     return RemoveResponse.Success;
@@ -302,7 +294,6 @@
 
         async Task<Response> HandleGetSuccessor(Request request)
         {
-
             try
             {
                 GetSuccessor getSuccessor = (GetSuccessor)request;

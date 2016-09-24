@@ -1,16 +1,13 @@
 ﻿namespace Com.Five.Dht.ServiceImpl
 {
     using Communication;
-    using CommunicationImpl;
     using Data;
-    using DataImpl;
     using Service;
+    using Service.Factory;
     using System;
 
     public class NodeBuilder
     {
-        byte _maxNoOfBits;
-
         IDataEntries _dataEntries;
 
         IChannel _channel;
@@ -21,13 +18,11 @@
 
         IHashFunction _hashFunction;
 
-        Uri _uri;
+        IdGenerator _idGenerator;
 
-        public NodeBuilder SetMaxNoOfBits(byte maxNoOfBits)
-        {
-            _maxNoOfBits = maxNoOfBits;
-            return this;
-        }
+        IRingFactory _ringFactory;
+
+        Uri _uri;
 
         public NodeBuilder SetUrl(Uri url)
         {
@@ -47,6 +42,12 @@
             return this;
         }
 
+        public NodeBuilder SetRingFactory(IRingFactory ringFactory)
+        {
+            _ringFactory = ringFactory;
+            return this;
+        }
+
         public NodeBuilder SetRequestResponseFormatter(
             IRequestResponseFormatter requestResponseFormatter)
         {
@@ -54,6 +55,11 @@
             return this;
         }
 
+        public NodeBuilder SetIdGenerator(IdGenerator idGenerator)
+        {
+            _idGenerator = idGenerator;
+            return this;
+        }
 
         public NodeBuilder SetDataEntries(IDataEntries dataEntries)
         {
@@ -73,26 +79,28 @@
             {
                 throw new InvalidOperationException("Uri not set.");
             }
-            byte maxNoOfBits = _maxNoOfBits <= 0 ?
-               RingContext.Default.MaxNoOfBits : _maxNoOfBits;
-
-            //TODO: All this should use a container?
+            if(null==_ringFactory)
+            {
+                throw new InvalidOperationException("Factory not set.");
+            }
+            
             IHashFunction hashFunction = _hashFunction 
-                ?? new SHA1HashFunction();
+                ?? _ringFactory.HashFunction;
 
-            IdGenerator _idGenerator = new IdGenerator(maxNoOfBits,
-                hashFunction);
-            IDataEntries dataEntries = _dataEntries ?? new DataEntries();
-            IChannel channel = _channel ?? new SocketChannel(_uri);
+            IdGenerator idGenerator = _idGenerator ??
+                _ringFactory.IdGenerator;
+            IDataEntries dataEntries = _dataEntries ?? 
+                _ringFactory.CreateDataEntries();
+            IChannel channel = _channel ?? _ringFactory.CreateChannel(_uri);
             IRequestResponseFormatter formatter = _requestResponseFormatter ??
-                new RequestResponseBinaryFormatter();
+                _ringFactory.Formatter;
             IRequestHandler requestHandler = _requestHandler ??
-                new RequestHandler(formatter, _idGenerator);
+                _ringFactory.CreateRequestHandler(formatter, idGenerator);
 
-            Id id = _idGenerator.Generate(_uri.AbsolutePath + ":"
+            Id id = idGenerator.Generate(_uri.AbsolutePath + ":"
                 + _uri.Port);
 
-            Node node = new Node(id, channel, dataEntries
+            Node node = new Node(id, _ringFactory, channel, dataEntries
                 , requestHandler);
             requestHandler.Node = node;
             return node;

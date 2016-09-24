@@ -5,7 +5,9 @@
     using Dht.Data;
     using Dht.DataImpl;
     using Dht.Service;
+    using Dht.Service.Factory;
     using Dht.ServiceImpl;
+    using Dht.ServiceImpl.FactoryImpl;
     using FluentAssertions;
     using NSubstitute;
     using NUnit.Framework;
@@ -24,6 +26,8 @@
         }
 
         IRequestResponseFormatter _formatter;
+
+        IRingFactory _sRingFactory = Substitute.For<IRingFactory>();
 
         ArraySegment<byte> _shutdownRequestBytes, _putRequestBytes, _getRequestBytes
             , _removeRequestBytes, _invalidRequestBytes, _pingRequestBytes
@@ -204,13 +208,21 @@
 
         [Category("Unit")]
         [Test]
-        public async Task RequestHandler_PutSuccess()
+        public async Task RequestHandler_PutSuccess_OneInRing()
         {
+            Id id = new Id(new byte[]{ 123 }, 8);
+
             IDataEntries entries = Substitute.For<IDataEntries>();
             entries.Put("123", "123").Returns(true);
             SortedList<Id, INodeInfo> mainNodeSuccessors
               = new SortedList<Id, INodeInfo>();
             INode node = Substitute.For<INode>();
+            node.Id.Returns(id);
+            node.Info.Returns(new NodeInfo
+            {
+                Id = id,
+                Url = new Uri("sock://localhost:8000")
+            });
             node.Entries.Returns(entries);
             node.Successors.Returns(mainNodeSuccessors);
 
@@ -233,6 +245,54 @@
             PutResponse putResponse = (PutResponse)response;
             putResponse.Status.Should().Be(Status.Ok);
         }
+
+        //[Category("Unit")]
+        //[Test]
+        //public async Task RequestHandler_PutSuccess_ThreeInRing()
+        //{
+        //    Id _123Id = new Id(new byte[] { 123 }, 8);
+        //    Id _160Id = new Id(new byte[] { 160 }, 8);
+        //    Id _33Id = new Id(new byte[] { 33 }, 8);
+
+        //    IDataEntries entries = Substitute.For<IDataEntries>();
+        //    entries.Put("123", "123").Returns(true);
+
+
+        //    INode node = Substitute.For<INode>();
+        //    node.Id.Returns(_123Id);
+        //    node.Entries.Returns(entries);
+
+        //    //INodeInfo _160Node = Substitute.For<INode>();
+        //    //_160Node.Id.Returns(_160Node);
+        //    //_160Node.Entries.Returns(entries);
+
+        //    SortedList<Id, INodeInfo> mainNodeSuccessors
+        //      = new SortedList<Id, INodeInfo>();
+        //    //mainNodeSuccessors.Add(_160Id, _160Node);
+
+            
+
+        //    node.Successors.Returns(mainNodeSuccessors);
+
+        //    RequestHandler reqHandler = new RequestHandler(_formatter
+        //        , _idGenerator);
+        //    reqHandler.Node = node;
+
+        //    byte[] responseBytes = await reqHandler.Handle(
+        //        _shutdownRequestBytes.Array.Length
+        //        , GetArray(_putRequestBytes));
+
+        //    object response = _formatter.GetObject(responseBytes.Length
+        //        , GetArray(new ArraySegment<byte>(responseBytes)));
+
+        //    response.Should().NotBeNull();
+        //    response.Should().BeAssignableTo<PutResponse>();
+
+        //    await entries.Received(1).Put("123", "123");
+
+        //    PutResponse putResponse = (PutResponse)response;
+        //    putResponse.Status.Should().Be(Status.Ok);
+        //}
 
         [Category("Unit")]
         [Test]
@@ -707,7 +767,8 @@
         public async Task RequestHandler_GetSuccessor_OneSuccessorButNotInRange()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUrl(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"))
+                .SetRingFactory(new NodeRingFactory());
 
             INode mainNode = builder.Build();
             mainNode.Start();

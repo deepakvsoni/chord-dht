@@ -9,29 +9,51 @@
     using Dht.Data;
     using Communication;
     using Dht.Service;
+    using Dht.Service.Factory;
+    using Dht.ServiceImpl.FactoryImpl;
 
     [TestFixture]
     public class NodeTests
     {
         Id _id = new Id(Encoding.UTF8.GetBytes("sock://localhost:5000"), 160);
-        IChannel _sChannel;
+        IdGenerator _idGenerator;
         IDataEntries _sDataEntries;
+        IChannel _sChannel;
+        IRequestResponseFormatter _sFormatter;
         IRequestHandler _sRequestHandler;
+        IRingFactory _sRingFactory;
 
         [SetUp]
         public void Setup()
         {
-            _sChannel = Substitute.For<IChannel>();
+            IHashFunction hashFunction = Substitute.For<IHashFunction>();
+            hashFunction.Length.Returns(8);
+            hashFunction.ComputeHash(Arg.Any<byte[]>())
+                .Returns(new byte[] { 123 });
+
+            _idGenerator = new IdGenerator(8, hashFunction);
+
             _sDataEntries = Substitute.For<IDataEntries>();
+            _sFormatter = Substitute.For<IRequestResponseFormatter>();
             _sRequestHandler = Substitute.For<IRequestHandler>();
+            _sChannel = Substitute.For<IChannel>();
+
+            _sRingFactory = Substitute.For<IRingFactory>();
+            _sRingFactory.CreateDataEntries().Returns(_sDataEntries);
+            _sRingFactory.Formatter.Returns(_sFormatter);
+            _sRingFactory.IdGenerator.Returns(_idGenerator);
+            _sRingFactory.CreateRequestHandler(
+                Arg.Any<IRequestResponseFormatter>(), Arg.Any<IdGenerator>())
+                .Returns(_sRequestHandler);
+            _sRingFactory.CreateChannel(Arg.Any<Uri>()).Returns(_sChannel);
         }
 
         [Category("Unit")]
         [Test]
         public void Node_Construct()
         {
-            Action a = () => new Node(_id, _sChannel, _sDataEntries
-                    , _sRequestHandler);
+            Action a = () => new Node(_id, _sRingFactory, _sChannel
+                , _sDataEntries, _sRequestHandler);
             a.ShouldNotThrow();
         }
 
@@ -39,8 +61,8 @@
         [Test]
         public void Node_ConstructNullId()
         {
-            Action a = () => new Node(null, _sChannel, _sDataEntries
-                    , _sRequestHandler);
+            Action a = () => new Node(null, _sRingFactory, _sChannel
+                , _sDataEntries, _sRequestHandler);
             a.ShouldThrow<ArgumentNullException>();
         }
 
@@ -48,7 +70,7 @@
         [Test]
         public void Node_ConstructNullChannel()
         {
-            Action a = () => new Node(_id, null, _sDataEntries
+            Action a = () => new Node(_id, _sRingFactory, null, _sDataEntries
                     , _sRequestHandler);
             a.ShouldThrow<ArgumentNullException>();
         }
@@ -57,7 +79,7 @@
         [Test]
         public void Node_ConstructNullDataEntries()
         {
-            Action a = () => new Node(_id, _sChannel, null
+            Action a = () => new Node(_id, _sRingFactory, _sChannel, null
                     , _sRequestHandler);
             a.ShouldThrow<ArgumentNullException>();
         }
@@ -66,8 +88,8 @@
         [Test]
         public void Node_ConstructNullRequestHandler()
         {
-            Action a = () => new Node(_id, _sChannel, _sDataEntries
-                    , null);
+            Action a = () => new Node(_id, _sRingFactory, _sChannel
+                , _sDataEntries, null);
             a.ShouldThrow<ArgumentNullException>();
         }
 
@@ -75,7 +97,7 @@
         [Test]
         public void Node_Dispose()
         {
-            Node node = new Node(_id, _sChannel, _sDataEntries
+            Node node = new Node(_id, _sRingFactory, _sChannel, _sDataEntries
                     , _sRequestHandler);
             Action a = () => node.Dispose();
             a.ShouldNotThrow();
@@ -85,7 +107,7 @@
         [Test]
         public void Node_CreateRing()
         {
-            Node node = new Node(_id, _sChannel, _sDataEntries
+            Node node = new Node(_id, _sRingFactory, _sChannel, _sDataEntries
                     , _sRequestHandler);
 
             _sChannel.State.Returns(State.Accepting);
@@ -103,7 +125,7 @@
         [Test]
         public void Node_CreateRingFailed()
         {
-            Node node = new Node(_id, _sChannel, _sDataEntries
+            Node node = new Node(_id, _sRingFactory, _sChannel, _sDataEntries
                     , _sRequestHandler);
             
             Action a = () => node.Start();
@@ -118,7 +140,8 @@
         public void Node_CreateRing_SocketChannel()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUrl(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"))
+                .SetRingFactory(new NodeRingFactory());
 
             Node node = builder.Build();
             Action a = () => node.Start();
@@ -132,7 +155,8 @@
         public void Node_JoinRing_SocketChannel()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUrl(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"))
+                 .SetRingFactory(new NodeRingFactory());
 
             Node node = builder.Build();
             node.Start();
@@ -155,7 +179,8 @@
         public void Node_JoinRing_Three()
         {
             NodeBuilder builder = new NodeBuilder();
-            builder.SetUrl(new Uri("sock://localhost:5000"));
+            builder.SetUrl(new Uri("sock://localhost:5000"))
+                 .SetRingFactory(new NodeRingFactory());
 
             Node node = builder.Build();
             node.Start();

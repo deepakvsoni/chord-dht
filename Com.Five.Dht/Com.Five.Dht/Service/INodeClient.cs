@@ -7,8 +7,6 @@
 
     public interface INodeClient
     {
-        Id Id { get; }
-
         IChannelClient ChannelClient { get; }
         
         Task<INodeInfo> GetSuccessor(Id id, Uri url);

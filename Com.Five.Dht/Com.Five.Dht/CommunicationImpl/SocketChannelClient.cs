@@ -20,7 +20,7 @@
 
         ConnectionState _state;
 
-        Uri _serverUri;
+        Uri _serverUrl;
 
         IPEndPoint _serverEndpoint;
 
@@ -42,13 +42,13 @@
             }
         }
 
-        public SocketChannelClient(Uri serverUri)
+        public SocketChannelClient(Uri serverUrl)
         {
-            if(null == serverUri)
+            if(null == serverUrl)
             {
-                throw new ArgumentNullException(nameof(serverUri));
+                throw new ArgumentNullException(nameof(serverUrl));
             }
-            _serverUri = serverUri;
+            _serverUrl = serverUrl;
         }
 
         public void RegisterChannelClientListener(
@@ -64,11 +64,11 @@
         public bool Connect()
         {
             _l.InfoFormat("Attempting to connect to {0}."
-                , _serverUri);
+                , _serverUrl);
 
-            IPHostEntry entry = Dns.GetHostEntry(_serverUri.Host);
+            IPHostEntry entry = Dns.GetHostEntry(_serverUrl.Host);
             IPAddress ipAddress = entry.AddressList[0];
-            _serverEndpoint = new IPEndPoint(ipAddress, _serverUri.Port);
+            _serverEndpoint = new IPEndPoint(ipAddress, _serverUrl.Port);
 
             _clientSocket = new Socket(AddressFamily.InterNetworkV6
                 , SocketType.Stream, ProtocolType.Tcp);
@@ -97,13 +97,13 @@
             if (connectedEa.SocketError != SocketError.Success)
             {
                 _l.ErrorFormat("Error connecting to endpoint {0}.",
-                    _serverUri);
+                    _serverUrl);
                 _clientConnected.Set();
                 //TODO: Handle
                 return;
             }
             State = ConnectionState.Connected;
-            _l.InfoFormat("Connected to {0}, my Uri {1}.", _serverUri
+            _l.InfoFormat("Connected to {0}, my Uri {1}.", _serverUrl
                 , _clientSocket.LocalEndPoint);
 
             _clientConnected.Set();

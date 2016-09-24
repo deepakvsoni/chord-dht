@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Com.Five.Dht.Data.Id" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="1" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAQAgADAAgAAAAAAAIAAAAAIAAAgByA=</HashCode>
+      <FileName>Data\Id.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Com.Five.Dht.Data.IdGenerator" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAAAAAAQQAAAAAAAAAAAAAAAABAAAAABAAAAAEAAAAI=</HashCode>
+      <FileName>Data\IdGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Com.Five.Dht.Data.IDataEntries" Collapsed="true">
+    <Position X="1" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Data\IDataEntries.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Data.IEntry" Collapsed="true">
+    <Position X="2.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\IEntry.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Data.IHashFunction" Collapsed="true">
+    <Position X="1" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Data\IHashFunction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

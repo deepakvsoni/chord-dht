@@ -8,6 +8,7 @@
     using Data;
     using System.Threading;
     using log4net;
+    using Service.Factory;
 
     public class Node : INode, IChannelListener, IDisposable
     {
@@ -19,7 +20,7 @@
         AutoResetEvent _channelAccepting = new AutoResetEvent(false);
         AutoResetEvent _channelClosed = new AutoResetEvent(false);
 
-        public Node(Id id, IChannel channel
+        public Node(Id id, IRingFactory ringFactory, IChannel channel
             , IDataEntries entries, IRequestHandler requestHandler)
         {
             if(null == id)
@@ -41,8 +42,10 @@
 
             _id = id;
             _channel = channel;
-            Entries = entries;
             _requestHandler = requestHandler;
+
+            Entries = entries;
+            Factory = ringFactory;
 
             _channel.RegisterChannelListener(this);
 
@@ -50,7 +53,13 @@
 
             FingerTable = new FingerTable(Info);
             Successors = new SortedList<Id, INodeInfo>(
-                RingContext.Default.NoOfSuccessorsToBeMaintained);
+                RingContext.Current.NoOfSuccessors);
+        }
+
+        public IRingFactory Factory
+        {
+            get;
+            private set;
         }
 
         public Id Id
@@ -142,11 +151,8 @@
         void DoJoinRing(Uri url)
         {
             _l.InfoFormat("Joining ring {0}", url);
-
-            NodeClientBuilder builder = new NodeClientBuilder();
-            builder.SetServerUri(url);
-
-            INodeClient client = builder.Build();
+            
+            INodeClient client = RingContext.Current.Factory.CreateNodeClient(url);
 
             _l.DebugFormat("Getting my successor from {0}", url);
 
@@ -165,10 +171,11 @@
 
                 Successors.Add(successorNode.Id, successorNode);
 
-                builder.SetServerUri(successorNode.Url);
-
+                
                 _l.Debug("Notifying successor about I being new predecessor.");
-                INodeClient successorClient = builder.Build();
+                INodeClient successorClient
+                    = RingContext.Current.Factory.CreateNodeClient(
+                        successorNode.Url);
 
                 Task<bool> notifyTask 
                     = successorClient.Notify(Id, Channel.Url);

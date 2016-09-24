@@ -13,11 +13,11 @@ namespace Com.Five.Dht.Service {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
-    internal sealed partial class RingContext : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class Ring : global::System.Configuration.ApplicationSettingsBase {
         
-        private static RingContext defaultInstance = ((RingContext)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new RingContext())));
+        private static Ring defaultInstance = ((Ring)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Ring())));
         
-        public static RingContext Default {
+        public static Ring Default {
             get {
                 return defaultInstance;
             }
@@ -34,10 +34,19 @@ namespace Com.Five.Dht.Service {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int NoOfSuccessorsToBeMaintained {
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int NoOfSuccessors {
             get {
-                return ((int)(this["NoOfSuccessorsToBeMaintained"]));
+                return ((int)(this["NoOfSuccessors"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Com.Five.Dht.ServiceImpl.FactoryImpl.NodeRingFactory, Com.Five.Dht")]
+        public string RingFactory {
+            get {
+                return ((string)(this["RingFactory"]));
             }
         }
     }

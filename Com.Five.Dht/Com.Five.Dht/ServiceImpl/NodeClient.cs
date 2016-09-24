@@ -9,15 +9,13 @@
 
     public class NodeClient : INodeClient
     {
-        //TODO: IChannelClient should be a factory.
-        //TODO: Correct method params. Id and Uri of calling node should 
-        //not be parameters.
         public NodeClient(IChannelClient channelClient,
             IRequestResponseFormatter formatter)
         {
             ChannelClient = channelClient;
             Formatter = formatter;
         }
+        
 
         public IChannelClient ChannelClient
         {
@@ -26,12 +24,6 @@
         }
 
         public IRequestResponseFormatter Formatter
-        {
-            get;
-            private set;
-        }
-
-        public Id Id
         {
             get;
             private set;

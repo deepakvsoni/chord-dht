@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Com.Five.Dht.Service.FingerTable" Collapsed="true">
+    <Position X="1.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAgBAAAAAAAACAAQAAAAAAAABAAAAAABAAAABAAAA=</HashCode>
+      <FileName>Service\FingerTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.RingContext" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAgAAAIACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\RingContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Ring" Collapsed="true">
+    <Position X="3.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAgAAAAAAAIBAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Com.Five.Dht.Service.INode" Collapsed="true">
+    <Position X="1.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgACAACCAAIAJAAEAAAAAAAAAAAAAAAEAAACA=</HashCode>
+      <FileName>Service\INode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Service.INodeClient" Collapsed="true">
+    <Position X="3.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAEAABAAAAAAAAABQAAAEAAAAAAg=</HashCode>
+      <FileName>Service\INodeClient.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Service.INodeInfo" Collapsed="true">
+    <Position X="5.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Service\INodeInfo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Service.IRequestHandler" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAEAAAA=</HashCode>
+      <FileName>Service\IRequestHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Service.IRequestResponseFormatter" Collapsed="true">
+    <Position X="3.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\IRequestResponseFormatter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Com.Five.Dht.Service.Factory.IRingFactory" Collapsed="true">
+    <Position X="5.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAIAAAABAAEAAAEAAAAAAAAAAAAhAAQAAACAAAA=</HashCode>
+      <FileName>Service\Factory\IRingFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -2,6 +2,7 @@
 {
     using Communication;
     using Data;
+    using Factory;
     using System;
     using System.Collections.Generic;
 
@@ -11,6 +12,8 @@
         {
             get;
         }
+
+        IRingFactory Factory { get; }
 
         Id Id { get; }
 
