@@ -1,4 +1,4 @@
-﻿namespace Com.Five.Dht.Communication.Requests
+﻿namespace Com.Five.Dht.Service.Requests
 {
     using System;
 

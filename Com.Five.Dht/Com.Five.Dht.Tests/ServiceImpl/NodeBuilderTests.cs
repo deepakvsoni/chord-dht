@@ -5,7 +5,7 @@
     using Dht.Data;
     using Dht.DataImpl;
     using Dht.Service;
-    using Dht.Service.Factory;
+    using Dht.Factory;
     using Dht.ServiceImpl;
     using FluentAssertions;
     using NSubstitute;

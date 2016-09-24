@@ -1,4 +1,4 @@
-﻿namespace Com.Five.Dht.Communication.Responses
+﻿namespace Com.Five.Dht.Service.Responses
 {
     using System;
     [Serializable]

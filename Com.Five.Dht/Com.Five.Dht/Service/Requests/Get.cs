@@ -1,9 +1,9 @@
-﻿namespace Com.Five.Dht.Communication.Requests
+﻿namespace Com.Five.Dht.Service.Requests
 {
     using System;
 
     [Serializable]
-    public class Remove : Request
+    public class Get : Request
     {
         public string Key
         {

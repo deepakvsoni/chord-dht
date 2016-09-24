@@ -3,7 +3,7 @@
     using Communication;
     using Data;
     using Service;
-    using Service.Factory;
+    using Factory;
     using System;
 
     public class NodeBuilder

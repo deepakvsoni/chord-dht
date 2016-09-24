@@ -1,7 +1,8 @@
-﻿namespace Com.Five.Dht.Service.Factory
+﻿namespace Com.Five.Dht.Factory
 {
     using Communication;
     using Data;
+    using Service;
     using System;
 
     public interface IRingFactory

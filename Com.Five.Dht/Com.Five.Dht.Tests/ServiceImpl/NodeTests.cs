@@ -9,8 +9,8 @@
     using Dht.Data;
     using Communication;
     using Dht.Service;
-    using Dht.Service.Factory;
-    using Dht.ServiceImpl.FactoryImpl;
+    using Dht.Factory;
+    using Dht.FactoryImpl;
 
     [TestFixture]
     public class NodeTests

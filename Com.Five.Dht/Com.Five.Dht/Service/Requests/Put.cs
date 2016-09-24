@@ -1,18 +1,17 @@
-﻿namespace Com.Five.Dht.Communication.Requests
+﻿namespace Com.Five.Dht.Service.Requests
 {
-    using Data;
     using System;
 
     [Serializable]
-    public class Notify : Request
+    public class Put : Request
     {
-        public Id Id
+        public string Key
         {
             get;
             set;
         }
 
-        public Uri Url
+        public object Value
         {
             get;
             set;

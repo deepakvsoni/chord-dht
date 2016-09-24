@@ -8,7 +8,7 @@
     using Data;
     using System.Threading;
     using log4net;
-    using Service.Factory;
+    using Factory;
 
     public class Node : INode, IChannelListener, IDisposable
     {

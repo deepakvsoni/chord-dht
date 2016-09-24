@@ -1,10 +1,10 @@
-﻿namespace Com.Five.Dht.Communication.Requests
+﻿namespace Com.Five.Dht.Service.Requests
 {
     using Data;
     using System;
 
     [Serializable]
-    public class GetSuccessor : Request
+    public class Notify : Request
     {
         public Id Id
         {

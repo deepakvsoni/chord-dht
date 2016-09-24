@@ -3,7 +3,7 @@
     using NUnit.Framework;
     using System;
     using FluentAssertions;
-    using Communication.Requests;
+    using Dht.Service.Requests;
     using System.Collections.Generic;
     using Dht.ServiceImpl;
 

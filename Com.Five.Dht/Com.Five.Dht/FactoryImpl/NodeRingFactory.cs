@@ -1,12 +1,13 @@
-﻿namespace Com.Five.Dht.ServiceImpl.FactoryImpl
+﻿namespace Com.Five.Dht.FactoryImpl
 {
     using Communication;
     using CommunicationImpl;
     using Data;
     using DataImpl;
     using Service;
-    using Service.Factory;
+    using Factory;
     using System;
+    using ServiceImpl;
 
     public class NodeRingFactory : IRingFactory
     {

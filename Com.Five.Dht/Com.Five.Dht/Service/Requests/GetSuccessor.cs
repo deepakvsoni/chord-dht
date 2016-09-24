@@ -1,17 +1,18 @@
-﻿namespace Com.Five.Dht.Communication.Requests
+﻿namespace Com.Five.Dht.Service.Requests
 {
+    using Data;
     using System;
 
     [Serializable]
-    public class Put : Request
+    public class GetSuccessor : Request
     {
-        public string Key
+        public Id Id
         {
             get;
             set;
         }
 
-        public object Value
+        public Uri Url
         {
             get;
             set;

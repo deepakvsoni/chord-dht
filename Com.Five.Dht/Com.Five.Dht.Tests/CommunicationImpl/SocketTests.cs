@@ -6,13 +6,12 @@
     using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
-    using Communication.Requests;
+    using Dht.Service.Requests;
     using NSubstitute;
     using Communication;
     using System.Collections.Generic;
-    using Communication.Responses;
+    using Dht.Service.Responses;
     using System.Text;
-    using Service;
     using Dht.ServiceImpl;
     using Dht.Service;
 

@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="3f07ee87-0c4b-49f8-89f5-7e89afa58a51" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="e543d5b1-4f29-4b89-aac7-30476e2137bc" name="CommunicationImpl">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="2e6e3794-6136-4a70-8f50-16d3d878c62b" direction="Forward">
+          <layerMoniker Id="01df7e90-f63b-4fd8-bd6b-754fdbf63f11" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="57729a85-e601-4783-bfb5-6e7c65b5575f" name="CommunicationImpl">
+          <ArtifactNode Label="CommunicationImpl" Category="CodeSchema_ProjectItem" Id="(Assembly=../Com.Five.Dht/Com.Five.Dht.csproj File=../Com.Five.Dht/CommunicationImpl/)">
+            <Category Ref="ProjectFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.CommunicationImpl Type=SocketAsyncEventArgsPool)" Label="SocketAsyncEventArgsPool" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.CommunicationImpl Type=SocketChannel)" Label="SocketChannel" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.CommunicationImpl Type=SocketChannelClient)" Label="SocketChannelClient" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.CommunicationImpl Type=Token)" Label="Token" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="591dbd2f-d797-45cc-9114-c4d2f16e7d38" name="Data">
+      <references>
+        <reference Id="040135f7-f219-4c6e-88ed-29749578062c" name="Data">
+          <ArtifactNode Label="Data" Category="CodeSchema_ProjectItem" Id="(Assembly=../Com.Five.Dht/Com.Five.Dht.csproj File=../Com.Five.Dht/Data/)">
+            <Category Ref="ProjectFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Data Type=Id)" Label="Id" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Data Type=IDataEntries)" Label="IDataEntries" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Data Type=IdGenerator)" Label="IdGenerator" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Data Type=(Name=GenerateId ParentType=IdGenerator))" Label="GenerateId" Category="CodeSchema_Delegate">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Data Type=IEntry)" Label="IEntry" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Data Type=IHashFunction)" Label="IHashFunction" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="28c1a5d1-170d-44b5-89b3-c111df7d0c40" name="DataImpl">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="339b3b31-bf55-4424-8911-740dde263ecd" direction="Forward">
+          <layerMoniker Id="591dbd2f-d797-45cc-9114-c4d2f16e7d38" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="432c6c20-9a94-4e50-95e5-630bfbbe2689" name="DataImpl">
+          <ArtifactNode Label="DataImpl" Category="CodeSchema_ProjectItem" Id="(Assembly=../Com.Five.Dht/Com.Five.Dht.csproj File=../Com.Five.Dht/DataImpl/)">
+            <Category Ref="ProjectFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.DataImpl Type=DataEntries)" Label="DataEntries" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.DataImpl Type=SHA1HashFunction)" Label="SHA1HashFunction" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="6c9fd58a-024d-4428-b248-5a3c26023454" name="ServiceImpl">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="2b61cc4c-688a-4ac1-9f77-4e2f3b2f7e12" direction="Forward">
+          <layerMoniker Id="8d203202-9872-428d-aa69-1428d44780a8" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="9f49a4bd-ad2e-4bbf-85c2-8b0f639333e4" direction="Forward">
+          <layerMoniker Id="01df7e90-f63b-4fd8-bd6b-754fdbf63f11" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="c1b241ae-cf59-4216-a8fa-f769b01ee859" direction="Forward">
+          <layerMoniker Id="591dbd2f-d797-45cc-9114-c4d2f16e7d38" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="dfaad841-b57d-4f52-bb6a-aa3d39905022" name="ServiceImpl">
+          <ArtifactNode Label="ServiceImpl" Category="CodeSchema_ProjectItem" Id="(Assembly=../Com.Five.Dht/Com.Five.Dht.csproj File=../Com.Five.Dht/ServiceImpl/)">
+            <Category Ref="ProjectFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl.FactoryImpl Type=NodeRingFactory)" Label="NodeRingFactory" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=Node)" Label="Node" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=NodeBuilder)" Label="NodeBuilder" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=NodeClient)" Label="NodeClient" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=NodeClientBuilder)" Label="NodeClientBuilder" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=NodeInfo)" Label="NodeInfo" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=RequestHandler)" Label="RequestHandler" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=(Name=Handler ParentType=RequestHandler))" Label="Handler" Category="CodeSchema_Delegate">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.ServiceImpl Type=RequestResponseBinaryFormatter)" Label="RequestResponseBinaryFormatter" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="8d203202-9872-428d-aa69-1428d44780a8" name="Service">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="c5968364-6ff5-428d-bc6e-85f8a1fac425" direction="Forward">
+          <layerMoniker Id="01df7e90-f63b-4fd8-bd6b-754fdbf63f11" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="764100a7-2275-4cfd-b97a-84df84d00adf" direction="Forward">
+          <layerMoniker Id="591dbd2f-d797-45cc-9114-c4d2f16e7d38" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="e6b68023-c88d-4b1d-8024-2f899a073c08" name="Service">
+          <ArtifactNode Label="Service" Category="CodeSchema_ProjectItem" Id="(Assembly=../Com.Five.Dht/Com.Five.Dht.csproj File=../Com.Five.Dht/Service/)">
+            <Category Ref="ProjectFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service.Factory Type=IRingFactory)" Label="IRingFactory" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=FingerTable)" Label="FingerTable" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=INode)" Label="INode" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=INodeClient)" Label="INodeClient" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=INodeInfo)" Label="INodeInfo" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=IRequestHandler)" Label="IRequestHandler" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=IRequestResponseFormatter)" Label="IRequestResponseFormatter" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=Ring)" Label="Ring" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Service Type=RingContext)" Label="RingContext" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="01df7e90-f63b-4fd8-bd6b-754fdbf63f11" name="Communication">
+      <references>
+        <reference Id="fd194a7b-1c0b-4485-a539-4209c30a0a87" name="Communication">
+          <ArtifactNode Label="Communication" Category="CodeSchema_ProjectItem" Id="(Assembly=../Com.Five.Dht/Com.Five.Dht.csproj File=../Com.Five.Dht/Communication/)">
+            <Category Ref="ProjectFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication Type=IChannel)" Label="IChannel" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication Type=State)" Label="State" Category="CodeSchema_Enum">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication Type=IChannelClient)" Label="IChannelClient" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication Type=ConnectionState)" Label="ConnectionState" Category="CodeSchema_Enum">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication Type=IChannelClientListener)" Label="IChannelClientListener" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication Type=IChannelListener)" Label="IChannelListener" Category="CodeSchema_Interface">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Get)" Label="Get" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=GetSuccessor)" Label="GetSuccessor" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Notify)" Label="Notify" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Ping)" Label="Ping" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Put)" Label="Put" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Remove)" Label="Remove" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Request)" Label="Request" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Requests Type=Shutdown)" Label="Shutdown" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=GetResponse)" Label="GetResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=GetSuccessorResponse)" Label="GetSuccessorResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=InternalErrorResponse)" Label="InternalErrorResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=InvalidRequestResponse)" Label="InvalidRequestResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=NotifyResponse)" Label="NotifyResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=PingResponse)" Label="PingResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=PutResponse)" Label="PutResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=RemoveResponse)" Label="RemoveResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=Response)" Label="Response" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=Status)" Label="Status" Category="CodeSchema_Enum">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=Com.Five.Dht Namespace=Com.Five.Dht.Communication.Responses Type=ShutdownResponse)" Label="ShutdownResponse" Category="CodeSchema_Class">
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+  </layers>
+</layerModel>

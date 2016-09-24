@@ -1,7 +1,7 @@
 ﻿namespace Com.Five.Dht.ServiceImpl
 {
     using Communication;
-    using Communication.Responses;
+    using Service.Responses;
     using Data;
     using Service;
     using System;
@@ -38,8 +38,8 @@
         {
             if (ChannelClient.Connect())
             {
-                Communication.Requests.GetSuccessor getSuccessor
-                    = new Communication.Requests.GetSuccessor
+                Service.Requests.GetSuccessor getSuccessor
+                    = new Service.Requests.GetSuccessor
                     {
                         Id = id,
                         Url = url
@@ -65,8 +65,8 @@
         {
             if (ChannelClient.Connect())
             {
-                Communication.Requests.Notify notify
-                    = new Communication.Requests.Notify
+                Service.Requests.Notify notify
+                    = new Service.Requests.Notify
                     {
                         Id = id,
                         Url = url

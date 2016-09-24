@@ -9,7 +9,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="RingFactory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Com.Five.Dht.ServiceImpl.FactoryImpl.NodeRingFactory, Com.Five.Dht</Value>
+      <Value Profile="(Default)">Com.Five.Dht.FactoryImpl.NodeRingFactory, Com.Five.Dht</Value>
     </Setting>
   </Settings>
 </SettingsFile>

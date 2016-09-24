@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A333EAA0-B
 		test.runsettings = test.runsettings
 	EndProjectSection
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "Com.Five.Dht.Model", "com.five.dht.model\Com.Five.Dht.Model.modelproj", "{77E94941-8E68-4282-ACD6-6AEA748A6D86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{7FF6A5E6-2780-4993-9EF8-D7550A6E20C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FF6A5E6-2780-4993-9EF8-D7550A6E20C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FF6A5E6-2780-4993-9EF8-D7550A6E20C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E94941-8E68-4282-ACD6-6AEA748A6D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E94941-8E68-4282-ACD6-6AEA748A6D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E94941-8E68-4282-ACD6-6AEA748A6D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E94941-8E68-4282-ACD6-6AEA748A6D86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

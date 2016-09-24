@@ -1,8 +1,8 @@
 ﻿namespace Com.Five.Dht.ServiceImpl
 {
     using Common;
-    using Communication.Requests;
-    using Communication.Responses;
+    using Service.Requests;
+    using Service.Responses;
     using Data;
     using log4net;
     using Service;

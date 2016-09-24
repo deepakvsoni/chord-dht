@@ -1,13 +1,13 @@
 ﻿namespace Com.Five.Dht.Tests.ServiceImpl
 {
-    using Communication.Requests;
-    using Communication.Responses;
+    using Dht.Service.Requests;
+    using Dht.Service.Responses;
     using Dht.Data;
     using Dht.DataImpl;
     using Dht.Service;
-    using Dht.Service.Factory;
+    using Dht.Factory;
     using Dht.ServiceImpl;
-    using Dht.ServiceImpl.FactoryImpl;
+    using Dht.FactoryImpl;
     using FluentAssertions;
     using NSubstitute;
     using NUnit.Framework;

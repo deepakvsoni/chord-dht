@@ -3,7 +3,7 @@
     using NUnit.Framework;
     using System;
     using FluentAssertions;
-    using Dht.ServiceImpl.FactoryImpl;
+    using Dht.FactoryImpl;
     using Communication;
     using Dht.Data;
     using Dht.Service;

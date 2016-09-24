@@ -43,7 +43,7 @@ namespace Com.Five.Dht.Service {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Com.Five.Dht.ServiceImpl.FactoryImpl.NodeRingFactory, Com.Five.Dht")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Com.Five.Dht.FactoryImpl.NodeRingFactory, Com.Five.Dht")]
         public string RingFactory {
             get {
                 return ((string)(this["RingFactory"]));

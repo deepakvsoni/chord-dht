@@ -1,9 +1,8 @@
 ﻿namespace Com.Five.Dht.ServiceImpl
 {
     using Communication;
-    using CommunicationImpl;
     using Service;
-    using Service.Factory;
+    using Factory;
     using System;
 
     public class NodeClientBuilder
