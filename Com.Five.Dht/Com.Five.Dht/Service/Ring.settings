@@ -6,7 +6,7 @@
       <Value Profile="(Default)">64</Value>
     </Setting>
     <Setting Name="NoOfSuccessors" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">4</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="RingFactory" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Com.Five.Dht.ServiceImpl.FactoryImpl.NodeRingFactory, Com.Five.Dht</Value>

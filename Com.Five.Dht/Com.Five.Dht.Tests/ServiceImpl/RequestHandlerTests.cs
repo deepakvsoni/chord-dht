@@ -568,10 +568,7 @@
         public async Task RequestHandler_GetSuccessor_ZeroSuccessors()
         {
             Id _89Id = new Id(new byte[] { 89 }, 8);
-            Id _160Id = new Id(new byte[] { 160 }, 8);
             Id _120Id = new Id(new byte[] { 120 }, 8);
-            Id _32Id = new Id(new byte[] { 32 }, 8);
-            Id _240Id = new Id(new byte[] { 240 }, 8);
 
             SortedList<Id, INodeInfo> mainNodeSuccessors 
                 = new SortedList<Id, INodeInfo>();
@@ -746,6 +743,91 @@
                 Url = _240Node.Url
             };
             byte[] getSuccessorBytes = _formatter.GetBytes(getSuccessor);
+
+            byte[] responseBytes = await reqHandler.Handle(
+                getSuccessorBytes.Length
+                , GetArray(new ArraySegment<byte>(getSuccessorBytes)));
+
+            object response = _formatter.GetObject(responseBytes.Length
+                , GetArray(new ArraySegment<byte>(responseBytes)));
+
+            response.Should().NotBeNull();
+            response.Should().BeAssignableTo<GetSuccessorResponse>();
+
+            GetSuccessorResponse getSucResponse
+                = (GetSuccessorResponse)response;
+            getSucResponse.NodeInfo.Id.Should().Be(_32Id);
+        }
+
+        [Category("Unit")]
+        [Test]
+        public async Task RequestHandler_GetSuccessor_OneSuccessorFinger()
+        {
+            Id _89Id = new Id(new byte[] { 89 }, 8);
+            Id _160Id = new Id(new byte[] { 160 }, 8);
+            Id _120Id = new Id(new byte[] { 120 }, 8);
+            Id _32Id = new Id(new byte[] { 32 }, 8);
+            Id _240Id = new Id(new byte[] { 240 }, 8);
+
+            SortedList<Id, INodeInfo> mainNodeSuccessors
+                = new SortedList<Id, INodeInfo>();
+
+            INodeInfo _160Node = new NodeInfo
+            {
+                Id = _160Id,
+                Url = new Uri("sock://localhost:5002")
+            };
+            INodeInfo _120Node = new NodeInfo
+            {
+                Id = _120Id,
+                Url = new Uri("sock://localhost:5001")
+            };
+            INodeInfo _32Node = new NodeInfo
+            {
+                Id = _32Id,
+                Url = new Uri("sock://localhost:5004")
+            };
+            INodeInfo _240Node = new NodeInfo
+            {
+                Id = _240Id,
+                Url = new Uri("sock://localhost:5005")
+            };
+
+            INodeClient c = Substitute.For<INodeClient>();
+            c.GetSuccessor(_240Id, _240Node.Url)
+                .Returns(x => { return _32Node; });
+
+            IRingFactory f = Substitute.For<IRingFactory>();
+            f.CreateNodeClient(_160Node.Url)
+                .Returns(c);
+
+            INode mainNode = Substitute.For<INode>();
+            mainNode.Id.Returns(_89Id);
+            mainNode.Successors.Returns(mainNodeSuccessors);
+            mainNode.Factory.Returns(f);
+            mainNode.Info.Returns(new NodeInfo
+            {
+                Id = _89Id,
+                Url = new Uri("sock://localhost:5000")
+            });
+            
+            GetSuccessor getSuccessor = new GetSuccessor
+            {
+                Id = _240Id,
+                Url = _240Node.Url
+            };
+            byte[] getSuccessorBytes = _formatter.GetBytes(getSuccessor);
+            
+            mainNodeSuccessors.Add(_160Id, _160Node);
+
+            FingerTable table = new FingerTable(mainNode.Info);
+            table.AddEntry(_160Node);
+            table.AddEntry(_32Node);
+            mainNode.FingerTable.Returns(table);
+
+            RequestHandler reqHandler = new RequestHandler(_formatter
+                , _idGenerator);
+            reqHandler.Node = mainNode;
 
             byte[] responseBytes = await reqHandler.Handle(
                 getSuccessorBytes.Length

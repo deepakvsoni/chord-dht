@@ -147,7 +147,7 @@
             }
             
             INodeClient client 
-                = RingContext.Current.Factory.CreateNodeClient(predecessor.Url);
+                = Node.Factory.CreateNodeClient(predecessor.Url);
 
             INodeInfo successorFromPredecessor 
                 = await client.GetSuccessor(id, url);

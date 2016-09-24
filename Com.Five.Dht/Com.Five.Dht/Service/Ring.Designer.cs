@@ -34,7 +34,7 @@ namespace Com.Five.Dht.Service {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int NoOfSuccessors {
             get {
                 return ((int)(this["NoOfSuccessors"]));
