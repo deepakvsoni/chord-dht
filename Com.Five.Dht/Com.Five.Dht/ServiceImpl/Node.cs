@@ -12,7 +12,7 @@
 
     public class Node : INode, IChannelListener, IDisposable
     {
-        ILog _l = LogManager.GetLogger(typeof(Node));
+        ILog _l;
 
         Id _id;
         IChannel _channel;
@@ -39,6 +39,8 @@
             {
                 throw new ArgumentNullException(nameof(requestHandler));
             }
+            _l = LogManager.GetLogger(string.Format("[Node {0}]"
+                , channel.Url));
 
             _id = id;
             _channel = channel;

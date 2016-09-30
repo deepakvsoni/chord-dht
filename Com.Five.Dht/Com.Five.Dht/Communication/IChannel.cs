@@ -1,5 +1,6 @@
 ﻿namespace Com.Five.Dht.Communication
 {
+    using Service;
     using System;
 
     public enum State

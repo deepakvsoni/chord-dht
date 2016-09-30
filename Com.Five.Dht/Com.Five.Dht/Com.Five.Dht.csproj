@@ -104,6 +104,11 @@
       <DependentUpon>Ring.settings</DependentUpon>
     </Compile>
     <Compile Include="Service\RingContext.cs" />
+    <Compile Include="Service\Tasks\ContinuousNodeTaskRunner.cs" />
+    <Compile Include="Service\Tasks\INodeTask.cs" />
+    <Compile Include="Service\Tasks\INodeTaskRunner.cs" />
+    <Compile Include="Service\Tasks\NodeTaskManager.cs" />
+    <Compile Include="Service\Tasks\PeriodicNodeTaskRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config">

@@ -1,4 +1,4 @@
-﻿namespace Com.Five.Dht.Tests.ServiceImpl.FactoryImpl
+﻿namespace Com.Five.Dht.Tests.FactoryImpl
 {
     using NUnit.Framework;
     using System;

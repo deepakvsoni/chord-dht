@@ -11,7 +11,7 @@
 
     public class SocketChannelClient : IChannelClient, IDisposable
     {
-        ILog _l = LogManager.GetLogger(typeof(SocketChannelClient));
+        ILog _l;
 
         ManualResetEventSlim _clientConnected = new ManualResetEventSlim(false),
             _responseReceived = new ManualResetEventSlim(false);
@@ -49,6 +49,9 @@
                 throw new ArgumentNullException(nameof(serverUrl));
             }
             _serverUrl = serverUrl;
+
+            _l = LogManager.GetLogger(string.Format("[Channel Client {0}]"
+                , _serverUrl = serverUrl));
         }
 
         public void RegisterChannelClientListener(

@@ -15,7 +15,8 @@
     {
         delegate Task<Response> Handler(Request req);
 
-        ILog _l = LogManager.GetLogger(typeof(RequestHandler));
+        ILog _l = LogManager.GetLogger(string.Format("[Request Handler {0}]"
+            , Guid.NewGuid()));
 
         IRequestResponseFormatter _formatter;
 
@@ -178,7 +179,8 @@
                     , handlerNode.Url);
                 
                 INodeClient client 
-                    = RingContext.Current.Factory.CreateNodeClient(handlerNode.Url);
+                    = RingContext.Current.Factory.CreateNodeClient(
+                        handlerNode.Url);
                 if(await client.Put(put.Key, put.Value))
                 {
                     return PutResponse.Success;
@@ -212,7 +214,8 @@
                     , handlerNode.Url);
                 
                 INodeClient client =
-                    RingContext.Current.Factory.CreateNodeClient(handlerNode.Url);
+                    RingContext.Current.Factory.CreateNodeClient(
+                        handlerNode.Url);
 
                 object value = await client.Get(get.Key);
 
@@ -239,7 +242,8 @@
                     , handlerNode.Url);
                 
                 INodeClient client =
-                    RingContext.Current.Factory.CreateNodeClient(handlerNode.Url);
+                    RingContext.Current.Factory.CreateNodeClient(
+                        handlerNode.Url);
                 if(await client.Remove(remove.Key))
                 {
                     return RemoveResponse.Success;

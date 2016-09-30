@@ -2,6 +2,7 @@
 {
     using Communication;
     using log4net;
+    using Service;
     using System;
     using System.Collections.Generic;
     using System.Net;
@@ -11,7 +12,7 @@
 
     public class SocketChannel : IChannel, IDisposable
     {
-        ILog _l = LogManager.GetLogger(typeof(SocketChannel));
+        ILog _l;
 
         int _maxConnections = 15;
 
@@ -32,7 +33,7 @@
         object _lock = new object();
         
         List<Socket> _openSockets = new List<Socket>();
-
+        
         public State State
         {
             get
@@ -70,6 +71,8 @@
             {
                 throw new ArgumentException("Port not defined.");
             }
+            _l = LogManager.GetLogger(string.Format("[Channel {0}]"
+                , url));
             Url = url;
             _pool = new SocketAsyncEventArgsPool(url.AbsolutePath
                 , _maxConnections, ReceiveSendCompleted);

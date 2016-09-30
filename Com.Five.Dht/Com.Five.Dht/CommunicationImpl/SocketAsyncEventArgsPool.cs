@@ -7,7 +7,7 @@
 
     public sealed class SocketAsyncEventArgsPool
     {
-        ILog _l = LogManager.GetLogger(typeof(SocketAsyncEventArgsPool));
+        ILog _l;
 
         object _lock = new object();
 
@@ -37,6 +37,8 @@
             , EventHandler<SocketAsyncEventArgs> completed)
         {
             Id = id;
+            _l = LogManager.GetLogger(string.Format("[Args Pool {0}]"
+                , id));
             _capacity = capacity;
             _completed = completed;
             _pool = new Stack<SocketAsyncEventArgs>(capacity);

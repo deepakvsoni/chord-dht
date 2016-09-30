@@ -1,66 +1,229 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Com.Five.Dht.Service.FingerTable" Collapsed="true">
-    <Position X="1.75" Y="1.5" Width="1.5" />
+    <Position X="24.25" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAgAgBAAAAAAAACAAQAAAAAAAABAAAAAABAAAABAAAA=</HashCode>
       <FileName>Service\FingerTable.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Service.RingContext" Collapsed="true">
-    <Position X="5.25" Y="1.5" Width="1.5" />
+    <Position X="26" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAgAAAIACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Service\RingContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Com.Five.Dht.Service.Ring" Collapsed="true">
-    <Position X="3.5" Y="1.5" Width="1.5" />
+    <Position X="24.25" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAgAAAAAAAIBAAAAABAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Get" Collapsed="true">
+    <Position X="1.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Requests\Get.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.GetSuccessor" Collapsed="true">
+    <Position X="4" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Service\Requests\GetSuccessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Notify" Collapsed="true">
+    <Position X="8.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Service\Requests\Notify.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Ping" Collapsed="true">
+    <Position X="10.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Service\Requests\Ping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Put" Collapsed="true">
+    <Position X="13" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Service\Requests\Put.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Remove" Collapsed="true">
+    <Position X="15.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Requests\Remove.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Request" Collapsed="true">
+    <Position X="8.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Requests\Request.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Requests.Shutdown" Collapsed="true">
+    <Position X="6.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Requests\Shutdown.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.GetResponse" Collapsed="true">
+    <Position X="8.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Service\Responses\GetResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.GetSuccessorResponse" Collapsed="true">
+    <Position X="13.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Responses\GetSuccessorResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.InternalErrorResponse" Collapsed="true">
+    <Position X="17.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Service\Responses\InternalErrorResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.InvalidRequestResponse" Collapsed="true">
+    <Position X="20" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Service\Responses\InvalidRequestResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.NotifyResponse" Collapsed="true">
+    <Position X="2" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Service\Responses\NotifyResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.PingResponse" Collapsed="true">
+    <Position X="6.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Responses\PingResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.PutResponse" Collapsed="true">
+    <Position X="11" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Service\Responses\PutResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.RemoveResponse" Collapsed="true">
+    <Position X="15.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Service\Responses\RemoveResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.Response" Collapsed="true">
+    <Position X="11" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Responses\Response.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Responses.ShutdownResponse" Collapsed="true">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Service\Responses\ShutdownResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Tasks.ContinuousNodeTaskRunner" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="22.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAQAACAAAAAgAAAAAAAAAAAAAAACAAAAAAQAAAA=</HashCode>
+      <FileName>Service\Tasks\ContinuousNodeTaskRunner.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Tasks.NodeTaskManager" Collapsed="true">
+    <Position X="26" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgIABAAEEAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Tasks\NodeTaskManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Com.Five.Dht.Service.Tasks.PeriodicNodeTaskRunner" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="22.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAQAACEgAAAgAAAAAAAAAAAAAAACAAAAAAQAAAA=</HashCode>
+      <FileName>Service\Tasks\PeriodicNodeTaskRunner.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
   <Interface Name="Com.Five.Dht.Service.INode" Collapsed="true">
-    <Position X="1.75" Y="2.75" Width="1.5" />
+    <Position X="22.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAgACAACCAAIAJAAEAAAAAAAAAAAAAAAEAAACA=</HashCode>
       <FileName>Service\INode.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Service.INodeClient" Collapsed="true">
-    <Position X="3.5" Y="2.75" Width="1.5" />
+    <Position X="24.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAEAABAAAAAAAAABQAAAEAAAAAAg=</HashCode>
       <FileName>Service\INodeClient.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Service.INodeInfo" Collapsed="true">
-    <Position X="5.25" Y="2.75" Width="1.5" />
+    <Position X="26" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
       <FileName>Service\INodeInfo.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Service.IRequestHandler" Collapsed="true">
-    <Position X="1.75" Y="3.5" Width="1.5" />
+    <Position X="26" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAEAAAA=</HashCode>
       <FileName>Service\IRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Com.Five.Dht.Service.IRequestResponseFormatter" Collapsed="true">
-    <Position X="3.5" Y="3.5" Width="1.5" />
+    <Position X="22.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Service\IRequestResponseFormatter.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Com.Five.Dht.Service.Factory.IRingFactory" Collapsed="true">
-    <Position X="5.25" Y="3.5" Width="1.5" />
+  <Interface Name="Com.Five.Dht.Service.Tasks.INodeTask" Collapsed="true">
+    <Position X="22.5" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAIAAAABAAEAAAEAAAAAAAAAAAAhAAQAAACAAAA=</HashCode>
-      <FileName>Service\Factory\IRingFactory.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Service\Tasks\INodeTask.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="Com.Five.Dht.Service.Tasks.INodeTaskRunner" Collapsed="true">
+    <Position X="24.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Service\Tasks\INodeTaskRunner.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Com.Five.Dht.Service.Responses.Status" Collapsed="true">
+    <Position X="22.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAABABAAAAAAA=</HashCode>
+      <FileName>Service\Responses\Response.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

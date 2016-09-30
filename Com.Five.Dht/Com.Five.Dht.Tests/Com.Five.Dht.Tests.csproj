@@ -98,7 +98,7 @@
   <ItemGroup>
     <Compile Include="Common\ByteHelpersTests.cs" />
     <Compile Include="DataImpl\IdGeneratorTests.cs" />
-    <Compile Include="ServiceImpl\FactoryImpl\NodeRingFactoryTests.cs" />
+    <Compile Include="FactoryImpl\NodeRingFactoryTests.cs" />
     <Compile Include="ServiceImpl\NodeClientBuilderTests.cs" />
     <Compile Include="ServiceImpl\NodeTests.cs" />
     <Compile Include="ServiceImpl\RequestHandlerTests.cs" />
@@ -115,6 +115,9 @@
     <Compile Include="ServiceImpl\NodeBuilderTests.cs" />
     <Compile Include="Service\FingerTableTests.cs" />
     <Compile Include="Service\RingContextTests.cs" />
+    <Compile Include="Service\Tasks\ContinuousNodeTaskRunnerTests.cs" />
+    <Compile Include="Service\Tasks\NodeTaskManagerTests.cs" />
+    <Compile Include="Service\Tasks\PeriodicNodeTaskRunnerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Com.Five.Dht\Com.Five.Dht.csproj">

@@ -246,53 +246,52 @@
             putResponse.Status.Should().Be(Status.Ok);
         }
 
-        //[Category("Unit")]
-        //[Test]
-        //public async Task RequestHandler_PutSuccess_ThreeInRing()
-        //{
-        //    Id _123Id = new Id(new byte[] { 123 }, 8);
-        //    Id _160Id = new Id(new byte[] { 160 }, 8);
-        //    Id _33Id = new Id(new byte[] { 33 }, 8);
+        [Category("Unit")]
+        [Test]
+        public async Task RequestHandler_PutSuccess_ThreeInRing()
+        {
+            Id _123Id = new Id(new byte[] { 123 }, 8);
+            Id _160Id = new Id(new byte[] { 160 }, 8);
+            Id _33Id = new Id(new byte[] { 33 }, 8);
 
-        //    IDataEntries entries = Substitute.For<IDataEntries>();
-        //    entries.Put("123", "123").Returns(true);
+            IDataEntries entries = Substitute.For<IDataEntries>();
+            entries.Put("123", "123").Returns(true);
 
+            INodeInfo info = new NodeInfo
+            {
+                Id = _123Id,
+                Url = new Uri("sock://localhost:4000")
+            };
 
-        //    INode node = Substitute.For<INode>();
-        //    node.Id.Returns(_123Id);
-        //    node.Entries.Returns(entries);
+            INode node = Substitute.For<INode>();
+            node.Id.Returns(_123Id);
+            node.Entries.Returns(entries);
+            node.Info.Returns(info);
 
-        //    //INodeInfo _160Node = Substitute.For<INode>();
-        //    //_160Node.Id.Returns(_160Node);
-        //    //_160Node.Entries.Returns(entries);
+            SortedList<Id, INodeInfo> mainNodeSuccessors
+              = new SortedList<Id, INodeInfo>();
 
-        //    SortedList<Id, INodeInfo> mainNodeSuccessors
-        //      = new SortedList<Id, INodeInfo>();
-        //    //mainNodeSuccessors.Add(_160Id, _160Node);
+            node.Successors.Returns(mainNodeSuccessors);
 
-            
+            RequestHandler reqHandler = new RequestHandler(_formatter
+                , _idGenerator);
+            reqHandler.Node = node;
 
-        //    node.Successors.Returns(mainNodeSuccessors);
+            byte[] responseBytes = await reqHandler.Handle(
+                _shutdownRequestBytes.Array.Length
+                , GetArray(_putRequestBytes));
 
-        //    RequestHandler reqHandler = new RequestHandler(_formatter
-        //        , _idGenerator);
-        //    reqHandler.Node = node;
+            object response = _formatter.GetObject(responseBytes.Length
+                , GetArray(new ArraySegment<byte>(responseBytes)));
 
-        //    byte[] responseBytes = await reqHandler.Handle(
-        //        _shutdownRequestBytes.Array.Length
-        //        , GetArray(_putRequestBytes));
+            response.Should().NotBeNull();
+            response.Should().BeAssignableTo<PutResponse>();
 
-        //    object response = _formatter.GetObject(responseBytes.Length
-        //        , GetArray(new ArraySegment<byte>(responseBytes)));
+            await entries.Received(1).Put("123", "123");
 
-        //    response.Should().NotBeNull();
-        //    response.Should().BeAssignableTo<PutResponse>();
-
-        //    await entries.Received(1).Put("123", "123");
-
-        //    PutResponse putResponse = (PutResponse)response;
-        //    putResponse.Status.Should().Be(Status.Ok);
-        //}
+            PutResponse putResponse = (PutResponse)response;
+            putResponse.Status.Should().Be(Status.Ok);
+        }
 
         [Category("Unit")]
         [Test]
